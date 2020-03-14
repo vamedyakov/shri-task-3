@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>gulp-scss-starter</title>
+        <meta name="theme-color" content="#fff">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <link rel="stylesheet" href="styles/main.css">
+    </head>
+    <body>
+        <div class="theme
+        theme_color_project-default
+        theme_color_default
+        theme_space_default
+        theme_font_default
+        theme_size_default
+        theme_round_default
+        theme_gap_default">
+            <div class="header">
+                <div class="header__content">
+                    <h1 class="header__logo text_view_secondary text_size_xl">School CI server</h1>
+                </div>
+            </div>
+            <div class="layout">
+                <div class="layout__container">
+                    <div class="settings">
+                        <div class="settings__title text_size_l text_weight_bold">Settings</div>
+                        <div class="settings__description text_size_m text_view_secondary">Configure repository connection and synchronization settings</div>
+                        <form class="form">
+                            <div class="form__item">
+                                <label for="repository" class="form__label text_size_m">GitHub repository<span class="text_view_required text_size_m">*</span></label>
+                                <div class="form__control">
+                                    <input type="text" class="input" placeholder="user-name/repo-name" required name="repository">
+                                    <i class="icon icon_close input__icon"></i>
+                                </div>
+                            </div>
+                            <div class="form__item">
+                                <label for="command" class="form__label text_size_m">Build command</label>
+                                <div class="form__control">
+                                    <input type="text" class="input" placeholder="npm ci && npm run build" value="npm ci && npm run build" name="command">
+                                    <i class="icon icon_close input__icon"></i>
+                                </div>
+                            </div>
+                            <div class="form__item">
+                                <label for="branch" class="form__label text_size_m">Main branch</label>
+                                <div class="form__control">
+                                    <input type="text" class="input" placeholder="master |" value="master |" name="branch">
+                                    <i class="icon icon_close input__icon"></i>
+                                </div>
+                            </div>
+                            <div class="form__item">
+                                <label for="synchronize_minutes" class="form__label text_size_m">Synchronize every</label>
+                                <div class="form__control form__control_type_minutes"><input type="text" maxlength="3" class="input form__control_type_minutes_input" value="10" name="synchronize_minutes"></div>
+                                <label for="synchronize_minutes" class="form__label text_size_m">minutes</label>
+                            </div>
+                            <div class="form__item">
+                                <div class="form__control">
+                                    <button class="button button_medium button_action form__button">Save</button>
+                                    <button class="button button_medium form__button">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <div class="footer__content">
+                    <ul class="footer__menu text_size_m">
+                        <li><a class="text_view_secondary footer__menu-link" href="#">Support</a></li>
+                        <li><a class="text_view_secondary footer__menu-link" href="#">Learning</a></li>
+                    </ul>
+                    <div class="text footer__text text_size_m text_view_secondary">© 2020 Vladimir</div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
