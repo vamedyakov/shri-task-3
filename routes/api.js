@@ -79,10 +79,10 @@ router.get('/builds', (req, res) => {
         });
 });
 
-router.post('/builds/:commitHash', express.json(), (req, res) => {
+router.post('/builds/:buildId', express.json(), (req, res) => {
     ShriApiClient.postBuildRequest(
         req.body.commitMessage,
-        req.params.commitHash,
+        req.params.buildId,
         req.body.branchName,
         req.body.authorName
     )
@@ -95,8 +95,8 @@ router.post('/builds/:commitHash', express.json(), (req, res) => {
         });
 });
 
-router.get('/builds/:commitHash', (req, res) => {
-    ShriApiClient.getBuildDetails(req.params.commitHash)
+router.get('/builds/:buildId', (req, res) => {
+    ShriApiClient.getBuildDetails(req.params.buildId)
         .then((response) => {
             if (response.status !== 200) {
                 return res.status(response.status).send(response.statusText);
@@ -106,8 +106,8 @@ router.get('/builds/:commitHash', (req, res) => {
         });
 });
 
-router.get('/builds/:commitHash/logs', (req, res) => {
-    ShriApiClient.getBuildLog(req.params.commitHash)
+router.get('/builds/:buildId/logs', (req, res) => {
+    ShriApiClient.getBuildLog(req.params.buildId)
         .then((response) => {
             if (response.status !== 200) {
                 return res.status(response.status).send(response.statusText);
