@@ -1,44 +1,76 @@
 const path = require('path');
 const nodegit = require("nodegit");
+const ShriApiClient = require('./ShriApiClient');
 
-module.exports.getFirstCommit = async (name) => {
-    const repProj = name.split('/');
-    const pathRep = path.resolve(__dirname, '../repositories/'+repProj[repProj.length-1]);
-    
-    const repo = await nodegit.Repository.open(path.resolve(pathRep, ".git"));
-    const firstCommit = await repo.getBranchCommit(process.conf.mainBranch);
-    
-    return {
-        commitMessage: firstCommit.message(),
-        commitHash: firstCommit.sha(), 
-        branchName: process.conf.mainBranch, 
-        authorName: firstCommit.author().name()
-    };
+const gitEvent = async () => {
+    const commits = await checkLog();
 
-   /* nodegit.Repository.open(path.resolve(pathRep, ".git"))
-        .then(function (repo) {
-            return repo.getBranchCommit('master');
-        })
-        .then(function (firstCommit) {
-            // History returns an event.
-            var history = firstCommit.history(nodegit.Revwalk.SORT.TIME);
-console.log(firstCommit.sha());
-            // History emits "commit" event for each commit in the branch's history
-            history.on("commit", function (commit) {
-                console.log("commit " + commit.sha());
-                console.log("Author:", commit.author().name() +
-                    " <" + commit.author().email() + ">");
-                console.log("Date:", commit.date());
-                console.log("\n    " + commit.message());
-            });
-
-            // Don't forget to call `start()`!
-            history.start();
-        })
-        .done();*/
+    if (commits.length > 0) {
+        commits.forEach((commit) => {
+            ShriApiClient.postBuildRequest(...Object.values(commit))
+                .then((response) => {
+                    console.log(response);
+                });
+        });
+    }
 }
 
-module.exports.clone = async (name) => {
+const checkLog = () => {
+    return new Promise(async (res, rej) => {
+        const newCommit = [];
+        let lastCommitHash;
+        const repProj = process.conf.repoName.split('/');
+        const pathRep = path.resolve(__dirname, '../repositories/' + repProj[repProj.length - 1]);
+
+        const repo = await nodegit.Repository.open(path.resolve(pathRep, ".git"));
+        await repo.fetchAll();
+        await repo.mergeBranches(process.conf.mainBranch, `origin/${process.conf.mainBranch}`);
+        const firstCommit = await repo.getBranchCommit(process.conf.mainBranch);
+
+        let response = await ShriApiClient.getBuildList(0, 1);
+        if (response.status === 200) {
+            if (response.data.data.length > 0) {
+                lastCommitHash = response.data.data[0].commitHash
+            }
+        }
+
+        if (lastCommitHash) {
+            let history = firstCommit.history(nodegit.Revwalk.SORT.TIME);
+            history.start();
+
+            history.on("commit", function (commit) {
+                if (commit.sha() === lastCommitHash) {
+                    res(newCommit);
+                    history.removeAllListeners('commit');
+                } else {
+                    newCommit.push({
+                        commitMessage: commit.message(),
+                        commitHash: commit.sha(),
+                        branchName: process.conf.mainBranch,
+                        authorName: commit.author().name()
+                    });
+                }
+            });
+        }
+    });
+}
+
+const getFirstCommit = async () => {
+    const repProj = process.conf.repoName.split('/');
+    const pathRep = path.resolve(__dirname, '../repositories/' + repProj[repProj.length - 1]);
+
+    const repo = await nodegit.Repository.open(path.resolve(pathRep, ".git"));
+    const firstCommit = await repo.getBranchCommit(process.conf.mainBranch);
+
+    return {
+        commitMessage: firstCommit.message(),
+        commitHash: firstCommit.sha(),
+        branchName: process.conf.mainBranch,
+        authorName: firstCommit.author().name()
+    };
+}
+
+const clone = async (name) => {
     let result = {
         data: '',
         status: 500,
@@ -47,8 +79,8 @@ module.exports.clone = async (name) => {
     let res;
     const repProj = name.split('/');
 
-    if(repProj.length>1){
-        const pathRep = path.resolve(__dirname, '../repositories/'+repProj[repProj.length-1]);
+    if (repProj.length > 1) {
+        const pathRep = path.resolve(__dirname, '../repositories/' + repProj[repProj.length - 1]);
 
         try {
             res = await nodegit.Clone(`https://github.com/${name}`, pathRep);
@@ -59,12 +91,14 @@ module.exports.clone = async (name) => {
         if (res instanceof nodegit.Repository) {
             result.status = 200;
             result.statusText = 'ok';
-        }else{
+        } else {
             result.statusText = res.toString();
         }
     }
-    
+
     return result;
 
 };
 
+
+module.exports = { gitEvent, checkLog, getFirstCommit, clone}

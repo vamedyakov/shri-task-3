@@ -39,25 +39,6 @@ router.post('/settings', express.json(), async (req, res) => {
         req.body.period
     );
 
-    if (response.status !== 200) {
-        return res.status(response.status).send(response.statusText);
-    }
-
-    const resCommand = await GitCommand.clone(req.body.repoName);
-    const firstCommit = await GitCommand.getFirstCommit(req.body.repoName);
-    ShriApiClient.postBuildRequest(...Object.values(firstCommit))
-        .then((response) => {
-            console.log(response);
-        });
-
-    if (resCommand.status === 200) {
-        const firstCommit = await GitCommand.getFirstCommit(req.body.repoName);
-        ShriApiClient.postBuildRequest(...firstCommit)
-            .then((response) => {
-                console.log(response);
-            });
-    }
-
     process.conf = {
         repoName: req.body.repoName,
         buildCommand: req.body.buildCommand,
@@ -65,18 +46,36 @@ router.post('/settings', express.json(), async (req, res) => {
         period: req.body.period
     };
 
+    if (response.status !== 200) {
+        return res.status(response.status).send(response.statusText);
+    }
+
+    const resCommand = await GitCommand.clone(req.body.repoName);
+
+    if (resCommand.status === 200) {
+        const firstCommit = await GitCommand.getFirstCommit();
+        ShriApiClient.postBuildRequest(...Object.values(firstCommit))
+            .then((response) => {
+                console.log(response);
+            });
+
+        if (process.conf.period > 0) {
+            clearInterval(process.gitEvent);
+            process.gitEvent = setInterval(GitCommand.gitEvent, process.conf.period * 60000);
+        }
+    }
+
     res.send(response);
 });
 
 router.get('/builds', (req, res) => {
-    console.log(process.conf);
     ShriApiClient.getBuildList()
         .then((response) => {
             if (response.status !== 200) {
                 return res.status(response.status).send(response.statusText);
             }
 
-            res.send(response);
+            res.send(response.data);
         });
 });
 

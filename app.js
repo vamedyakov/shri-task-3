@@ -2,6 +2,7 @@ const path = require('path');
 const express = require('express');
 const apiRoute = require('./routes/api');
 const ShriApiClient = require('./src/ShriApiClient');
+const GitCommand = require('./src/GitCommand');
 const app = express();
 
 ShriApiClient.getConf()
@@ -14,6 +15,10 @@ ShriApiClient.getConf()
         mainBranch: response.data.data.mainBranch,
         period: response.data.data.period
       };
+
+      if (process.conf.period > 0) {
+        process.gitEvent = setInterval(GitCommand.gitEvent, process.conf.period * 60000);
+      }
     }
   });
 
