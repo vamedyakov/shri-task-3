@@ -2,7 +2,8 @@ const axios = require('axios');
 const https = require('https');
 require('dotenv').config();
 
-class ShriApiClient {
+class ShriApiClient 
+{
     constructor() {
         this.client = axios.create({
             baseURL: 'https://hw.shri.yandex/api',
@@ -159,4 +160,7 @@ class ShriApiClient {
     }
 }
 
-module.exports = ShriApiClient;
+
+instance = new ShriApiClient();
+
+module.exports = instance;

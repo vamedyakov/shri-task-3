@@ -1,18 +1,28 @@
 const path = require('path');
 const nodegit = require("nodegit");
 
-module.exports.log = async () => {
-    const pathRep = path.resolve(__dirname, '../repositories/shri-task-3');
-
+module.exports.getFirstCommit = async (name) => {
+    const repProj = name.split('/');
+    const pathRep = path.resolve(__dirname, '../repositories/'+repProj[repProj.length-1]);
     
-    nodegit.Repository.open(path.resolve(pathRep, ".git"))
-        .then(function (repo) {
-            return repo.getMasterCommit();
-        })
-        .then(function (firstCommitOnMaster) {
-            // History returns an event.
-            var history = firstCommitOnMaster.history(nodegit.Revwalk.SORT.TIME);
+    const repo = await nodegit.Repository.open(path.resolve(pathRep, ".git"));
+    const firstCommit = await repo.getBranchCommit(process.conf.mainBranch);
+    
+    return {
+        commitMessage: firstCommit.message(),
+        commitHash: firstCommit.sha(), 
+        branchName: process.conf.mainBranch, 
+        authorName: firstCommit.author().name()
+    };
 
+   /* nodegit.Repository.open(path.resolve(pathRep, ".git"))
+        .then(function (repo) {
+            return repo.getBranchCommit('master');
+        })
+        .then(function (firstCommit) {
+            // History returns an event.
+            var history = firstCommit.history(nodegit.Revwalk.SORT.TIME);
+console.log(firstCommit.sha());
             // History emits "commit" event for each commit in the branch's history
             history.on("commit", function (commit) {
                 console.log("commit " + commit.sha());
@@ -25,7 +35,7 @@ module.exports.log = async () => {
             // Don't forget to call `start()`!
             history.start();
         })
-        .done();
+        .done();*/
 }
 
 module.exports.clone = async (name) => {
