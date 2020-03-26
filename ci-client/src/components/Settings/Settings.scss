@@ -1,0 +1,43 @@
+@import '../../constants.scss';
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    width: 474px;
+
+    @media screen and (max-width: $screen-s) {
+        width: 100%;
+    }
+
+    &__title {
+        margin-bottom: var(--space-xs);
+    }
+
+    &__description {
+        margin-bottom: var(--space-3xl);
+    }
+}
+.form {
+    
+    &__item:not(:last-child) {
+        margin-bottom: var(--space-xl);
+    }
+
+    &__control {
+        display: flex;
+        position: relative;
+        
+        @media screen and (max-width: $screen-s) {
+            flex-direction: column;
+        }
+    }
+    
+    &__button {
+        margin-right: var(--space-xs);
+
+        @media screen and (max-width: $screen-s) {
+            margin-bottom: var(--space-m);
+            margin-right: 0;
+        }
+    }
+}

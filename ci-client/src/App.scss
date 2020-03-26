@@ -1,0 +1,90 @@
+.app {
+    box-sizing: border-box;
+
+    &_round {
+        &_default {
+            --col-round: 4px;
+            --col-round-build: 6px;
+        }
+    }
+
+
+    &_color {
+        &_project-default {
+            /* Цвета блоков */
+            --color-bg-default: #ffffff; /* Цвет дефолта */
+            --color-bg-log: #f2f2f2; /* Цвет лога */
+            --color-bg-border: #d9d9d9; /* Цвет границ */
+            --color-bg-border-focus: #b3b3b3; /* Цвет границ focus*/
+            --color-bg-action: #ffcc00; /* Цвет фона акцентный */
+            --color-bg-action-hover: #f2c200; /* Цвет фона акцентный hover */
+            --color-bg-action-focus: #b38f00; /* Цвет фона акцентный focus */
+            --color-bg-control: #e6e6e6; /* Цвет кнопки */
+            --color-bg-control-hover: #dbdbdb; /* Цвет кнопки */
+            --color-bg-footer: #f0f2f3; /* Цвет footer */
+    
+            /* Цвета текста */
+            --color-typo-primary: #000000; /* Цвет основного текста */
+            --color-typo-secondary: #7f8285; /* Цвет второстепенного текста */
+            --color-typo-ghost: #7f8285; /* Цвет дополнительного текста */
+            --color-typo-required: #ff3333; /* Цвет required */
+    
+            /* Цвета ссылок */
+            --color-link: #0077ff; /* Цвет основной ссылки */
+            --color-link-hover: #e00000; /* Цвет наведения ссылки */
+
+            /* build status*/
+            --color-build-completed: #00b341;
+            --color-build-fail: #ff3333;
+            --color-build-processing: #ff9a00;
+        }
+    }
+
+    &_font {
+        &_default {
+            font-family: "YS Text", "Helvetica Neue", Arial, sans-serif;
+            -webkit-font-feature-settings: "liga", "kern";
+            -moz-font-feature-settings: "liga", "kern";
+            font-feature-settings: "liga", "kern";
+        }
+    }
+
+    &_size {
+        &_default {
+            /* Font size */
+            --size-text-s: 8px;
+            --size-text-m: 10px;
+            --size-text-l: 13px;
+            --size-text-xl: 15px;
+            --size-text-2xl: 18px;
+            --size-text-3xl: 24px;
+          
+            /* Line height */
+            --line-height-text-s: 16px;
+            --line-height-text-m: 18px;
+            --line-height-text-l: 20px;
+            --line-height-text-xl: 22px;
+            --line-height-text-2xl: 28px;
+            --line-height-text-3xl: 30px;
+
+            font-size: var(--size-text-l);
+        }
+    }
+
+    &_space {
+        &_default {
+            /* Отступы */
+            --space-3xs: 4px;
+            --space-2xs: 6px;
+            --space-xs: 8px;
+            --space-s: 10px;
+            --space-m: 12px;
+            --space-l: 16px;
+            --space-xl: 18px;
+            --space-2xl: 20px;
+            --space-3xl: 22px;
+            --space-4xl: 24px;
+            --space-5xl: 32px;
+        }
+    }
+}

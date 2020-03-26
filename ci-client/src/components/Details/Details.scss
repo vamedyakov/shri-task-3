@@ -1,0 +1,24 @@
+@import '../../constants.scss';
+
+.detail {
+    width: 100%;
+
+    &__content {
+        margin-bottom: var(--space-m);
+
+        @media screen and (max-width: $screen-s) {
+            margin-bottom: var(--space-l);
+        }
+    }
+}
+.log {
+    background-color: var(--color-bg-log);
+    margin: 0;
+    padding: 8px 12px;
+    overflow-x: auto;
+    
+    @media screen and (max-width: $screen-s) {
+        margin-left: -16px;
+        margin-right: -16px;
+    }
+}
