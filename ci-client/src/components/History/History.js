@@ -21,7 +21,6 @@ let data = {
 
 export function History() {
     return (
-        <>
             <div className='start'>
                 <Header title='philip1967/my-awesome-repo-with-long-long-repo-name' menu history sizeTitle="xxxl" />
                 <div className="layout">
@@ -43,6 +42,5 @@ export function History() {
                 </div>
                 <Footer />
             </div>
-        </>
     );
 }

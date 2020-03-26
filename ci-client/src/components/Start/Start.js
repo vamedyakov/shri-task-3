@@ -1,4 +1,3 @@
-
 import React from 'react';
 import './Start.scss';
 import '../Text/Text.scss';
@@ -9,7 +8,6 @@ import { Footer } from '../Footer/Footer';
 
 export function Start() {
   return (
-    <>
       <div className='start'>
         <Header menu title='School CI server' sizeTitle="xxl" />
         <div className="layout">
@@ -23,6 +21,5 @@ export function Start() {
         </div>
         <Footer />
       </div>
-    </>
   );
 }

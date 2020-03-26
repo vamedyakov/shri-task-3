@@ -21,7 +21,6 @@ let data = {
 
 export function Details() {
     return (
-        <>
             <div className='start'>
                 <Header title='philip1967/my-awesome-repo-with-long-long-repo-name' menu details sizeTitle="xxxl" />
                 <div className="layout">
@@ -90,6 +89,5 @@ Child
                 </div>
                 <Footer />
             </div>
-        </>
     );
 }

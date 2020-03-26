@@ -10,7 +10,6 @@ import { Input } from '../Input/Input';
 
 export function Settings() {
     return (
-        <>
             <div className='start'>
                 <Header title='School CI server' viewTitle="secondary" sizeTitle="xl" />
                 <div className="layout">
@@ -45,6 +44,5 @@ export function Settings() {
                 </div>
                 <Footer />
             </div>
-        </>
     );
 }

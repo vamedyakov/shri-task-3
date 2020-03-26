@@ -14,12 +14,12 @@ export function Input({ labelText, name, placeholder, maxlength, require, closeB
     });
 
     return (
-        <>
+        <div>
             {labelText ? <label for={name} className="input__label text_size_m">{labelText}</label>: "" }
             <div className={inputControl}>
                 <input className={input} id={name} name={name} maxlength={maxlength} type={type} placeholder={placeholder} value={value} required={require} />
                 {closeBtn ? <Icon type="close" el="input" /> : ""}
             </div>
-        </>
+        </div>
     );
 }
