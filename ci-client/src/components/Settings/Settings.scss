@@ -19,8 +19,18 @@
 }
 .form {
     
-    &__item:not(:last-child) {
-        margin-bottom: var(--space-xl);
+    &__item{
+        &:not(:last-child) {
+            margin-bottom: var(--space-xl);
+    
+            
+        }
+        
+        &_error {
+            .input {
+                border: 2px solid var(--color-bg-border-error);
+            }
+        }
     }
 
     &__control {

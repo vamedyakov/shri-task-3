@@ -10,24 +10,37 @@ router.get('/', function (req, res) {
 router.get('/settings', (req, res) => {
     ShriApiClient.getConf()
         .then((response) => {
+			let result;
+            if (response.status !== 200) {
+                return res.status(response.status).send(response.statusText);
+            }
+			
+			result = response.data;
+
+			if(response.data.data){
+				process.conf = {
+					repoName: response.data.data.repoName,
+					buildCommand: response.data.data.buildCommand,
+					mainBranch: response.data.data.mainBranch,
+					period: response.data.data.period
+				};
+				
+				result = process.conf;
+			}
+
+			res.send(result);
+        });
+});
+
+router.get('/settingsDel', (req, res) => {
+    ShriApiClient.deleteConf()
+        .then((response) => {
+			let result;
             if (response.status !== 200) {
                 return res.status(response.status).send(response.statusText);
             }
 
-            process.conf = {
-                repoName: response.data.data.repoName,
-                buildCommand: response.data.data.buildCommand,
-                mainBranch: response.data.data.mainBranch,
-                period: response.data.data.period
-            };
-
-            res.send({
-                id: response.data.data.id,
-                repoName: response.data.data.repoName,
-                buildCommand: response.data.data.buildCommand,
-                mainBranch: response.data.data.mainBranch,
-                period: response.data.data.period
-            });
+			res.send(response);
         });
 });
 
@@ -75,7 +88,7 @@ router.get('/builds', (req, res) => {
                 return res.status(response.status).send(response.statusText);
             }
 
-            res.send(response.data);
+            res.send(response.data.data);
         });
 });
 
@@ -102,7 +115,7 @@ router.get('/builds/:buildId', (req, res) => {
                 return res.status(response.status).send(response.statusText);
             }
 
-            res.send(response);
+            res.send(response.data.data);
         });
 });
 
@@ -113,7 +126,7 @@ router.get('/builds/:buildId/logs', (req, res) => {
                 return res.status(response.status).send(response.statusText);
             }
 
-            res.send(response);
+            res.send(response.data);
         });
 });
 

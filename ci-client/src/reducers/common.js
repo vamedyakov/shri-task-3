@@ -14,13 +14,14 @@ import {
   PROFILE_FAVORITES_PAGE_UNLOADED,
   SETTINGS_PAGE_UNLOADED,
   LOGIN_PAGE_UNLOADED,
-  REGISTER_PAGE_UNLOADED
+  REGISTER_PAGE_UNLOADED,
+  HISTORY_PAGE_LOADED,
+  DETAILS_PAGE_LOADED
 } from '../constants/actionTypes';
 
 const defaultState = {
   appName: 'Conduit',
-  token: null,
-  viewChangeCounter: 0
+  userConfig: {}
 };
 
 export default (state = defaultState, action) => {
@@ -28,9 +29,19 @@ export default (state = defaultState, action) => {
     case APP_LOAD:
       return {
         ...state,
-        token: action.token || null,
         appLoaded: true,
-        currentUser: action.payload ? action.payload.user : null
+        userConfig: action.userConf ? action.userConf : null
+      };
+    case HISTORY_PAGE_LOADED:
+      return {
+        ...state,
+        buildsList: action.buildsList ? action.buildsList : null
+      };
+    case DETAILS_PAGE_LOADED:
+      return {
+        ...state,
+        build: action.build ? action.build : null,
+        log: action.log ? action.log : null
       };
     case REDIRECT:
       return { ...state, redirectTo: null };

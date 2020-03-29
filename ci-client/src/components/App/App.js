@@ -1,72 +1,59 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { APP_LOAD, REDIRECT } from '../../constants/actionTypes';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { push } from 'react-router-redux';
-import { store } from '../../store';
+import { BrowserRouter as Switch, Route } from 'react-router-dom';
+
+import { APP_LOAD } from '../../constants/actionTypes';
+
+import ciServer from '../../api/ciServer';
 
 
-import { Start } from '../Start/Start';
-import { Settings } from '../Settings/Settings';
-import { History } from '../History/History';
-import { Details } from '../Details/Details';
 import { Header } from '../Header/Header';
+import { Footer } from '../Footer/Footer';
+import Home from '../Home/Home';
+import Settings from '../Settings/Settings';
+import History from '../History/History';
+import Details from '../Details/Details';
 import './App.scss';
 
 const mapStateToProps = state => {
   return {
     appLoaded: state.common.appLoaded,
     appName: state.common.appName,
-    currentUser: state.common.currentUser,
-    redirectTo: state.common.redirectTo
+    userConfig: state.common.userConfig
   }
 };
 
 const mapDispatchToProps = dispatch => ({
-  onLoad: (payload, token) =>
-    dispatch({ type: APP_LOAD, payload, token, skipTracking: true }),
-  onRedirect: () =>
-    dispatch({ type: REDIRECT })
+  onLoad: (userConf) =>
+    dispatch({ type: APP_LOAD, userConf, })
 });
 
 class App extends React.Component {
-  componentWillReceiveProps(nextProps) {
-    /*if (nextProps.redirectTo) {
-      // this.context.router.replace(nextProps.redirectTo);
-      store.dispatch(push(nextProps.redirectTo));
-      this.props.onRedirect();
-    }*/
-  }
-
   componentWillMount() {
-    this.props.onLoad(null, '132');
-    /*if(false){
-
-    }else {
-      store.dispatch(push('/settings'));
-      this.props.onRedirect();
-
-    }*/
+    ciServer.getSettings()
+      .then(res => {
+        this.props.onLoad(res.data);
+      });
   }
 
   render() {
     if (this.props.appLoaded) {
       return (
         <div className="app">
-          <Router>
-            <Switch>
-              <Route exact path="/" component={Start} />
-              <Route path="/settings" component={Settings} />
-              <Route path='/history' component={History} />
-              <Route path='/build/:id' component={Details} />
-            </Switch>
-          </Router>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/settings" component={Settings} />
+            <Route path='/history' component={History} />
+            <Route path='/build/:id' component={Details} />
+          </Switch>
+          <Footer />
         </div>
       );
     }
     return (
       <div className="app">
         <Header menu title='School CI server' sizeTitle="xxl" />
+        <Footer />
       </div>
     );
   }

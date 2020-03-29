@@ -18,7 +18,7 @@ export function Header({ menu, details, history, title, sizeTitle, viewTitle }) 
                     <div className='header__menu'>
                         {details ? <Button text="Rebuild" type="small" elIcon="button" icon="rebuild" /> : ""}
                         {history ? <Button text="Run build" type="small" elIcon="button" icon="run-build" /> : ""}
-                        {(details || history) ? <Button type="small" elIcon="button" icon="settings" only /> : <Button text="Settings" type="small" elIcon="button" icon="settings" />}
+                        {(details || history) ? <Button type="small" to="/settings" elIcon="button" icon="settings" only /> : <Button text="Settings" to="/settings" type="small" elIcon="button" icon="settings" />}
                     </div>
                     : ""}
             </div>

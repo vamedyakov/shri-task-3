@@ -1,46 +1,49 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import './History.scss';
 import '../Text/Text.scss';
 import '../Layout/Layout.scss';
 import { Header } from '../Header/Header';
-import { Build } from '../Build/Build';
-import { Button } from '../Button/Button';
-import { Footer } from '../Footer/Footer';
+import BuildsList from '../Build/BuildsList';
+import ciServer from '../../api/ciServer';
+
+import {
+    HISTORY_PAGE_LOADED
+} from '../../constants/actionTypes';
 
 
-let data = {
-    id: "123",
-    status: "completed",
-    name: "add documentation for postgres scaler",
-    branch: "master",
-    commit: "9c9f0b9",
-    author: "Philip Kirkorov",
-    date: "21 янв. 03:06",
-    time: "1 ч 20 мин"
-}
+const mapStateToProps = state => ({
+    userConfig: state.common.userConfig,
+    buildsList: state.common.buildsList
+});
 
-export function History() {
-    return (
-            <div className='start'>
-                <Header title='philip1967/my-awesome-repo-with-long-long-repo-name' menu history sizeTitle="xxxl" />
+const mapDispatchToProps = dispatch => ({
+    onLoad: (buildsList) =>
+        dispatch({ type: HISTORY_PAGE_LOADED, buildsList })
+});
+
+class History extends React.Component {
+
+    componentWillMount() {
+        ciServer.getAllbuilds()
+          .then(res => {
+              if(res.data){
+                this.props.onLoad(res.data);
+              }
+          });
+    }
+
+    render() {
+        return (
+            <div>
+                <Header title={this.props.userConfig.repoName} menu history sizeTitle="xxxl" />
                 <div className="layout">
                     <div className="layout__container">
-                        <div className="list">
-                            <Build additional="list__content" data={data} />
-                            <Build additional="list__content" data={data} />
-                            <Build additional="list__content" data={data} />
-                            <Build additional="list__content" data={data} />
-                            <Build additional="list__content" data={data} />
-                            <Build additional="list__content" data={data} />
-                            <Build additional="list__content" data={data} />
-                            <Build additional="list__content" data={data} />
-                            <div class="list__navigation">
-                                <Button text="Show more" type="medium" additional="list-navigation" />
-                            </div>
-                        </div>
+                        <BuildsList buildsList={this.props.buildsList} />
                     </div>
                 </div>
-                <Footer />
             </div>
-    );
+        );
+    }
 }
+export default connect(mapStateToProps, mapDispatchToProps)(History);

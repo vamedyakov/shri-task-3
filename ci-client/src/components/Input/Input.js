@@ -5,7 +5,7 @@ import './Input.scss';
 import '../Text/Text.scss';
 
 
-export function Input({ labelText, name, placeholder, maxlength, require, closeBtn, value, type = "text", inputClass }) {
+export function Input({ labelText, onChange, name, placeholder, maxlength, require, closeBtn, closeBtnOnClick, value, type = "text", inputClass }) {
     const inputControl = classNames('input__control', {
         [`input__control_type_${inputClass}`]: inputClass
     });
@@ -14,11 +14,21 @@ export function Input({ labelText, name, placeholder, maxlength, require, closeB
     });
 
     return (
-        <div>
-            {labelText ? <label for={name} className="input__label text_size_m">{labelText}</label>: "" }
+        <div className="input__group">
+            {labelText ? <label htmlFor={name} className="input__label text_size_m">{labelText}</label> : ""}
             <div className={inputControl}>
-                <input className={input} id={name} name={name} maxlength={maxlength} type={type} placeholder={placeholder} value={value} required={require} />
-                {closeBtn ? <Icon type="close" el="input" /> : ""}
+                <input
+                    className={input}
+                    id={name}
+                    onChange={onChange}
+                    name={name}
+                    maxLength={maxlength}
+                    type={type}
+                    placeholder={placeholder}
+                    defaultValue={value}
+                    required={require}
+                />
+                {closeBtn ? <Icon type="close" name={name} on el="input" onClick={closeBtnOnClick} /> : ""}
             </div>
         </div>
     );

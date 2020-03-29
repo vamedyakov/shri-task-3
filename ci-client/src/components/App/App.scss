@@ -8,6 +8,7 @@
     --color-bg-default: #ffffff; /* Цвет дефолта */
     --color-bg-log: #f2f2f2; /* Цвет лога */
     --color-bg-border: #d9d9d9; /* Цвет границ */
+    --color-bg-border-error: #ff3333;
     --color-bg-border-focus: #b3b3b3; /* Цвет границ focus*/
     --color-bg-action: #ffcc00; /* Цвет фона акцентный */
     --color-bg-action-hover: #f2c200; /* Цвет фона акцентный hover */
@@ -15,12 +16,14 @@
     --color-bg-control: #e6e6e6; /* Цвет кнопки */
     --color-bg-control-hover: #dbdbdb; /* Цвет кнопки */
     --color-bg-footer: #f0f2f3; /* Цвет footer */
+    --color-bg-disabled: #f2f2f2;
 
     /* Цвета текста */
     --color-typo-primary: #000000; /* Цвет основного текста */
     --color-typo-secondary: #7f8285; /* Цвет второстепенного текста */
     --color-typo-ghost: #7f8285; /* Цвет дополнительного текста */
     --color-typo-required: #ff3333; /* Цвет required */
+    --color-typo-disabled: #7f7f7f;
 
     /* Цвета ссылок */
     --color-link: #0077ff; /* Цвет основной ссылки */
