@@ -25,6 +25,9 @@
         color: var(--color-typo-disabled);
         background-color: var(--color-bg-disabled) !important;
     }
+    &[hidden] {
+        display: none;
+    }
 
     &_small {
         height: 28px;

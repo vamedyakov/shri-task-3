@@ -1,6 +1,8 @@
 import React from 'react';
 import classNames from 'classnames';
 import { Icon } from '../Icon/Icon';
+import { format } from 'date-fns';
+import { ru } from 'date-fns/locale'
 import './Build.scss';
 import '../Text/Text.scss';
 
@@ -13,21 +15,22 @@ let BuildStatus = {
 }
 
 export function Build({ additional, data }) {
-    if(data) {
-        data.status = BuildStatus[data.status];
+    if (data) {
+        console.log(data);
+        let status = BuildStatus[data.status];
         const build = classNames({
             [`${additional}`]: additional,
         }, "build");
-    
-        const status = classNames({
-            [`build__status_${additional}`]: data.status,
+
+        const statusClass = classNames({
+            [`build__status_${additional}`]: status,
         }, "build__number");
-    
+
         return (
             <div className={build}>
                 <div className="build__left">
                     <div className="build__head">
-                        <div className={status}><Icon type={data.status} el="build-status" />#{data.buildNumber}</div>
+                        <div className={statusClass}><Icon type={status} el="build-status" />#{data.buildNumber}</div>
                         <div className="build__title text_size_l">{data.commitMessage}</div>
                     </div>
                     <div className="build__middle">
@@ -36,17 +39,17 @@ export function Build({ additional, data }) {
                     </div>
                 </div>
                 <div>
-                    {(data.date || data.time) ?
+                    {(data.start || data.duration) ?
                         <div className="build__footer">
-                            {data.date ? <div className="build__date build_align_center"><Icon type="calendar" el="build" /> {data.date}</div> : ""}
-                            {data.time ? <div className="build__duration build_align_center"><Icon type="time" el="build" /> {data.time}</div> : ""}
+                            {data.start ? <div className="build__date build_align_center"><Icon type="calendar" el="build" />{format(new Date(data.start), 'd MMM HH:mm', { locale: ru }).replace('.', ',')}</div> : ""}
+                            {data.duration ? <div className="build__duration build_align_center"><Icon type="time" el="build" />{`${data.duration / 60 ^ 0} ч ${data.duration % 60} мин`}</div> : ""}
                         </div>
                         : ""
                     }
                 </div>
             </div>
         );
-    }else{
+    } else {
         return (<div></div>);
     }
 }

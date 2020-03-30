@@ -1,23 +1,24 @@
 import {
   SETTINGS_SAVED,
-  SETTINGS_PAGE_UNLOADED,
-  ASYNC_START
+  SETTINGS_SUBMIT_FORM
 } from '../constants/actionTypes';
 
-export default (state = {}, action) => {
+const defaultState = {
+  inProgress: false,
+};
+
+
+export default (state = defaultState, action) => {
   switch (action.type) {
     case SETTINGS_SAVED:
       return {
         ...state,
         inProgress: false,
-        errors: action.error ? action.payload.errors : null
       };
-    case SETTINGS_PAGE_UNLOADED:
-      return {};
-    case ASYNC_START:
+    case SETTINGS_SUBMIT_FORM:
       return {
         ...state,
-        inProgress: true
+        inProgress: true,
       };
     default:
       return state;

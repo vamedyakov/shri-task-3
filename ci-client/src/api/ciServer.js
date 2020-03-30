@@ -4,18 +4,18 @@ async function getSettings() {
     let res;
     try {
         res = await axios.get(`/api/settings`);
-    }  catch (err) {
+    } catch (err) {
         res = err.response;
     }
 
     return res;
 }
 
-async function getAllbuilds() {
+async function getBuilds(offset = 0, limit = 25) {
     let res;
     try {
-        res = await axios.get(`/api/builds`);
-    }  catch (err) {
+        res = await axios.get(`/api/builds`, { params: { offset, limit } });
+    } catch (err) {
         res = err.response;
     }
 
@@ -26,7 +26,7 @@ async function getBuildbyID(id) {
     let res;
     try {
         res = await axios.get(`/api/builds/${id}`);
-    }  catch (err) {
+    } catch (err) {
         res = err.response;
     }
 
@@ -37,7 +37,7 @@ async function getBuildLogbyID(id) {
     let res;
     try {
         res = await axios.get(`/api/builds/${id}/logs`);
-    }  catch (err) {
+    } catch (err) {
         res = err.response;
     }
 
@@ -52,8 +52,19 @@ async function postSaveSettings(data) {
             buildCommand: data.command,
             mainBranch: data.branch,
             period: Number(data.syncMinutes)
-          });
-    }  catch (err) {
+        });
+    } catch (err) {
+        res = err.response;
+    }
+
+    return res;
+}
+
+async function postAddQueue(data) {
+    let res;
+    try {
+        res = await axios.post(`/api/builds/${data.commitHash}`);
+    } catch (err) {
         res = err.response;
     }
 
@@ -62,7 +73,8 @@ async function postSaveSettings(data) {
 
 export default {
     getSettings,
-    getAllbuilds,
+    getBuilds,
+    postAddQueue,
     getBuildbyID,
     getBuildLogbyID,
     postSaveSettings

@@ -17,9 +17,12 @@ const BuildsList = props => {
                         );
                     })
                 }
-                <div className="list__navigation">
-                    <Button text="Show more" type="medium" additional="list-navigation" />
-                </div>
+                {!props.hideMore ?
+                    <div className="list__navigation">
+                        <Button text="Show more" onClick={props.onClick} type="medium" additional="list-navigation" />
+                    </div>
+                    : null
+                }
             </div>
         );
     }

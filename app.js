@@ -13,15 +13,19 @@ ShriApiClient.getConf()
         repoName: response.data.data.repoName,
         buildCommand: response.data.data.buildCommand,
         mainBranch: response.data.data.mainBranch,
-        period: response.data.data.period
+        period: response.data.data.period,
+        lastCommit: ''
       };
+	  GitCommand.getFirstCommit()
+		.then((res) => {
+			process.conf.lastCommit = res.commitHash;
 
-      if (process.conf.period > 0) {
-        process.gitEvent = setInterval(GitCommand.gitEvent, process.conf.period * 60000);
-      }
+			if (process.conf.period > 0) {
+				process.gitEvent = setInterval(GitCommand.gitEvent, process.conf.period * 60000);
+			}
+		});
     }
   });
-
 
 app.set('views', path.resolve(__dirname, 'views'));
 

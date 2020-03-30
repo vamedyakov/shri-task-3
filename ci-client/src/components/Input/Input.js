@@ -25,7 +25,7 @@ export function Input({ labelText, onChange, name, placeholder, maxlength, requi
                     maxLength={maxlength}
                     type={type}
                     placeholder={placeholder}
-                    defaultValue={value}
+                    value={value}
                     required={require}
                 />
                 {closeBtn ? <Icon type="close" name={name} on el="input" onClick={closeBtnOnClick} /> : ""}

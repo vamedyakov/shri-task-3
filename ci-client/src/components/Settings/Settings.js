@@ -7,20 +7,28 @@ import '../Layout/Layout.scss';
 import { Header } from '../Header/Header';
 import { Button } from '../Button/Button';
 import { Input } from '../Input/Input';
+import { FormErrors } from '../FormErrors/FormErrors';
 
 import ciServer from '../../api/ciServer';
 import {
     SETTINGS_PAGE_LOADED,
+    SETTINGS_SUBMIT_FORM,
+    SETTINGS_SAVED,
 } from '../../constants/actionTypes';
 
 
 const mapStateToProps = state => ({
+    ...state.settings,
     userConfig: state.common.userConfig
 });
 
 const mapDispatchToProps = dispatch => ({
     onLoad: () =>
-        dispatch({ type: SETTINGS_PAGE_LOADED, })
+        dispatch({ type: SETTINGS_PAGE_LOADED, }),
+    onSubmitForm: () =>
+        dispatch({ type: SETTINGS_SUBMIT_FORM, }),
+    onSettingsSaved: () =>
+        dispatch({ type: SETTINGS_SAVED, })
 });
 class Settings extends React.Component {
     constructor(props) {
@@ -38,7 +46,7 @@ class Settings extends React.Component {
             syncMinutesValid: false,
             formValid: false,
 
-            formErrors: { repository: '', command: '', branch: '', syncMinutes: '' },
+            formErrors: [],
         }
     }
     handleUserInput = (event) => {
@@ -52,31 +60,30 @@ class Settings extends React.Component {
         event.preventDefault();
         const name = event.target.getAttribute('data-name');
         
-        this.setState({ [name]: '1234' },
-            () => { this.validateField(name, '1234') });
+        this.setState({ [name]: '' },
+            () => { this.validateField(name, '') });
     }
 
     validateField(fieldName, value) {
         let { formErrors } = this.state;
-        console.log(this.state);
         let valid = false;
 
         switch (fieldName) {
             case 'repository':
                 valid = /(.)\/(.)/g.test(value);
-                formErrors.repository = valid ? '' : ' is invalid';
+                if(!valid) formErrors.push(fieldName+' is invalid');
                 break;
             case 'command':
                 valid = value.length > 2;
-                formErrors.command = valid ? '' : ' is too short';
+                if(!valid) formErrors.push(fieldName+' is invalid');
                 break;
             case 'branch':
                 valid = value.length > 0;
-                formErrors.branch = valid ? '' : ' is empty';
+                if(!valid) formErrors.push(fieldName+' is invalid');
                 break;
             case 'syncMinutes':
                 valid = Number(value) > 0;
-                formErrors.syncMinutes = valid ? '' : ' is empty';
+                if(!valid) formErrors.push(fieldName+' is invalid');
                 break;
             default:
                 break;
@@ -95,7 +102,7 @@ class Settings extends React.Component {
     }
 
     errorClass(error) {
-        return (error.length === 0 ? '' : 'form__item_error');
+        return (!error && this.state.formErrors.length > 0 ? 'form__item_error' : '');
     }
 
     componentWillMount() {
@@ -117,8 +124,14 @@ class Settings extends React.Component {
     submit(e) {
         e.preventDefault();
         if(this.state.formValid) {
+            let formErrors = [];
+            this.props.onSubmitForm();
             ciServer.postSaveSettings(this.state).then(res => {
-                console.log(res);
+                if(res.status !== 200){
+                    formErrors.push(res.data);
+                }
+                this.setState({formErrors: formErrors });
+                this.props.onSettingsSaved();
             });
         }
     }
@@ -132,24 +145,25 @@ class Settings extends React.Component {
                         <div className="settings">
                             <h2 className="settings__title text_size_l text_weight_bold">Settings</h2>
                             <div className="settings__description text_size_m text_view_secondary">Configure repository connection and synchronization settings</div>
+                            <FormErrors formErrors={this.state.formErrors} />
                             <form className="form" onSubmit={this.submit.bind(this)}>
-                                <div className={`form__item ${this.errorClass(this.state.formErrors.repository)}`}>
+                                <div className={`form__item ${this.errorClass(this.state.repositoryValid)}`}>
                                     <Input labelText="GitHub repository" name="repository" closeBtnOnClick={this.handleResetField} onChange={this.handleUserInput} value={this.state.repository} placeholder="user-name/repo-name" require closeBtn />
                                 </div>
-                                <div className={`form__item ${this.errorClass(this.state.formErrors.command)}`}>
+                                <div className={`form__item ${this.errorClass(this.state.commandValid)}`}>
                                     <Input labelText="Build command" name="command" closeBtnOnClick={this.handleResetField} onChange={this.handleUserInput} value={this.state.command} placeholder="npm ci && npm run build" closeBtn />
                                 </div>
-                                <div className={`form__item ${this.errorClass(this.state.formErrors.branch)}`}>
+                                <div className={`form__item ${this.errorClass(this.state.branchValid)}`}>
                                     <Input labelText="Main branch" name="branch" closeBtnOnClick={this.handleResetField} onChange={this.handleUserInput} value={this.state.branch} placeholder="master |" closeBtn />
                                 </div>
-                                <div className={`form__item ${this.errorClass(this.state.formErrors.syncMinutes)}`}>
+                                <div className={`form__item ${this.errorClass(this.state.syncMinutesValid)}`}>
                                     <label htmlFor="syncMinutes" className="form__label text_size_m">Synchronize every</label>
                                     <Input name="syncMinutes" onChange={this.handleUserInput} value={this.state.syncMinutes} maxlength="3" inputClass="minutes" />
                                     <label htmlFor="syncMinutes" className="form__label text_size_m">minutes</label>
                                 </div>
                                 <div className="form__item">
                                     <div className="form__control">
-                                        <Button text='Save' type="medium" disabled={!this.state.formValid} action additional="form" />
+                                        <Button text='Save' type="medium" disabled={!this.state.formValid || this.props.inProgress} action additional="form" />
                                         <Button to="/" text='Cancel' type="medium" additional="form" />
                                     </div>
                                 </div>

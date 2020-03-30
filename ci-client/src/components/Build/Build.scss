@@ -68,6 +68,8 @@
     &__commit {
         margin-left: var(--space-3xs);
         color: var(--color-typo-secondary);
+        max-width: 70px;
+        overflow: hidden;
     }
 
     &__branch {
