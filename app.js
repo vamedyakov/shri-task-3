@@ -7,7 +7,7 @@ const app = express();
 
 ShriApiClient.getConf()
   .then((response) => {
-    if (response.status === 200) {
+    if (response.status === 200 && response.data.data) {
 
       process.conf = {
         repoName: response.data.data.repoName,

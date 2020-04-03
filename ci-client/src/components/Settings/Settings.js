@@ -65,31 +65,35 @@ class Settings extends React.Component {
     }
 
     validateField(fieldName, value) {
-        let { formErrors } = this.state;
+        let formErrors = new Set(this.state.formErrors);
         let valid = false;
 
         switch (fieldName) {
             case 'repository':
                 valid = /(.)\/(.)/g.test(value);
-                if(!valid) formErrors.push(fieldName+' is invalid');
+                if(!valid) formErrors.add(fieldName+' is invalid');
+                else  formErrors.delete(fieldName+' is invalid');
                 break;
             case 'command':
                 valid = value.length > 2;
-                if(!valid) formErrors.push(fieldName+' is invalid');
+                if(!valid) formErrors.add(fieldName+' is invalid');
+                else  formErrors.delete(fieldName+' is invalid');
                 break;
             case 'branch':
                 valid = value.length > 0;
-                if(!valid) formErrors.push(fieldName+' is invalid');
+                if(!valid) formErrors.add(fieldName+' is invalid');
+                else  formErrors.delete(fieldName+' is invalid');
                 break;
             case 'syncMinutes':
                 valid = Number(value) > 0;
-                if(!valid) formErrors.push(fieldName+' is invalid');
+                if(!valid) formErrors.add(fieldName+' is invalid');
+                else  formErrors.delete(fieldName+' is invalid');
                 break;
             default:
                 break;
         }
 
-        this.setState({ [fieldName + 'Valid']: valid, formErrors: formErrors }, this.validateForm);
+        this.setState({ [fieldName + 'Valid']: valid, formErrors: [...formErrors] }, this.validateForm);
     }
 
     validateForm() {
@@ -106,19 +110,31 @@ class Settings extends React.Component {
     }
 
     componentWillMount() {
-        this.setState({ repository: this.props.userConfig.repoName },
-            () => { this.validateField('repository', this.props.userConfig.repoName) });
-
-        this.setState({ command: this.props.userConfig.buildCommand },
-            () => { this.validateField('command', this.props.userConfig.buildCommand) });
-
-        this.setState({ branch: this.props.userConfig.mainBranch },
-            () => { this.validateField('branch', this.props.userConfig.mainBranch) });
-
-        this.setState({ syncMinutes: this.props.userConfig.period },
-            () => { this.validateField('syncMinutes', this.props.userConfig.period) });
-
         this.props.onLoad();
+        if(this.props.userConfig){
+            if(this.props.userConfig.repoName.length > 0){
+                this.setState({ repository: this.props.userConfig.repoName },
+                    () => { this.validateField('repository', this.props.userConfig.repoName) });
+            }
+    
+            if(this.props.userConfig.buildCommand.length > 0){
+                this.setState({ command: this.props.userConfig.buildCommand },
+                    () => { this.validateField('command', this.props.userConfig.buildCommand) });
+            }
+    
+            if(this.props.userConfig.mainBranch.length > 0){
+                this.setState({ branch: this.props.userConfig.mainBranch },
+                    () => { this.validateField('branch', this.props.userConfig.mainBranch) });
+            }
+    
+            if(this.props.userConfig.buildCommand.length > 0){
+                this.setState({ syncMinutes: this.props.userConfig.period },
+                    () => { this.validateField('syncMinutes', this.props.userConfig.period) });
+            }
+    
+    
+        }
+
     }
 
     submit(e) {

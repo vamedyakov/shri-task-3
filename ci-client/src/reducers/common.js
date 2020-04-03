@@ -5,7 +5,12 @@ import {
 } from '../constants/actionTypes';
 
 const defaultState = {
-  userConfig: {}
+  userConfig: {
+    repoName: '',
+    buildCommand: '',
+    mainBranch: '',
+    period: ''
+  }
 };
 
 export default (state = defaultState, action) => {
@@ -14,7 +19,7 @@ export default (state = defaultState, action) => {
       return {
         ...state,
         appLoaded: true,
-        userConfig: action.userConf ? action.userConf : null
+        userConfig: (action.userConf && Object.keys(action.userConf).length > 0) ? action.userConf : defaultState.userConfig
       };
     case DETAILS_PAGE_LOADED:
       return {
