@@ -5,6 +5,14 @@ const ShriApiClient = require('./src/ShriApiClient');
 const GitCommand = require('./src/GitCommand');
 const app = express();
 
+process.conf = {
+	repoName: '',
+	buildCommand: '',
+	mainBranch: '',
+	period: 1,
+	lastCommit: ''
+};
+
 ShriApiClient.getConf()
   .then((response) => {
     if (response.status === 200 && response.data.data) {
