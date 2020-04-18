@@ -1,0 +1,20 @@
+@import '../../constants.scss';
+
+.list {
+    width: 100%;
+
+    &__content {
+        margin-bottom: var(--space-xs);
+    }
+
+    &-navigation {
+        &__button {
+            display: block;
+            text-align: center;
+
+            @media screen and (max-width: $screen-s) {
+                width: 100%;
+            }
+        }
+    }
+}

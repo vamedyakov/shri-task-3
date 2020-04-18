@@ -1,0 +1,64 @@
+@import '../../constants.scss';
+
+.input {
+    width: 100%;
+    height: 36px;
+    border: 2px solid var(--color-bg-border);
+    border-radius: var(--col-round);
+    padding: 11px 13px 10px 13px;
+    outline: none;
+
+    &::placeholder {
+        opacity: 0.3;
+    }
+
+    &:focus {
+        border-color: var(--color-bg-border-focus);
+    }
+
+    &__group {
+        display: inline;
+    }
+    
+    &__icon {
+        display: none;
+        position: absolute;
+        cursor: pointer;
+        right: 0;
+        margin: 10px;
+
+        +.input {
+            padding-right: 30px;
+        }
+    }
+
+    &:not(:placeholder-shown) + .input__icon {
+        display: block;
+    }
+
+    &__label {
+        display: inline-block;
+        margin-bottom: var(--space-2xs);
+    }
+
+    &__control {
+        display: flex;
+        position: relative;
+        
+        @media screen and (max-width: $screen-s) {
+            flex-direction: column;
+        }
+
+        &_type {
+            &_minutes {
+                display: inline-block;
+                width: 52px;
+                margin: var(--space-xs);
+
+                &_input {
+                    text-align: end;
+                }
+            }
+        }
+    }
+}

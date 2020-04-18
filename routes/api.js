@@ -10,52 +10,73 @@ router.get('/', function (req, res) {
 router.get('/settings', (req, res) => {
     ShriApiClient.getConf()
         .then((response) => {
+			let result;
+            if (response.status !== 200) {
+                return res.status(response.status).send(response.statusText);
+            }
+			
+			result = response.data;
+
+			if(response.data.data){
+				process.conf = {
+					repoName: response.data.data.repoName,
+					buildCommand: response.data.data.buildCommand,
+					mainBranch: response.data.data.mainBranch,
+					period: response.data.data.period
+				};
+				
+				result = process.conf;
+			}
+
+			res.send(result);
+        });
+});
+
+router.get('/settingsDel', (req, res) => {
+    ShriApiClient.deleteConf()
+        .then((response) => {
+			let result;
             if (response.status !== 200) {
                 return res.status(response.status).send(response.statusText);
             }
 
-            process.conf = {
-                repoName: response.data.data.repoName,
-                buildCommand: response.data.data.buildCommand,
-                mainBranch: response.data.data.mainBranch,
-                period: response.data.data.period
-            };
-
-            res.send({
-                id: response.data.data.id,
-                repoName: response.data.data.repoName,
-                buildCommand: response.data.data.buildCommand,
-                mainBranch: response.data.data.mainBranch,
-                period: response.data.data.period
-            });
+			res.send(response);
         });
 });
 
 router.post('/settings', express.json(), async (req, res) => {
-    let response = await ShriApiClient.postConf(
-        req.body.repoName,
-        req.body.buildCommand,
-        req.body.mainBranch,
-        req.body.period
-    );
-
-    process.conf = {
-        repoName: req.body.repoName,
-        buildCommand: req.body.buildCommand,
-        mainBranch: req.body.mainBranch,
-        period: req.body.period
-    };
-
-    if (response.status !== 200) {
-        return res.status(response.status).send(response.statusText);
-    }
-
     const resCommand = await GitCommand.clone(req.body.repoName);
+	
+	if(process.conf.repoName !== req.body.repoName) {
+		if (resCommand.status !== 200) {
+			return res.status(resCommand.status).send(resCommand.statusText);
+		}
+	}
+
+	let response = await ShriApiClient.postConf(
+		req.body.repoName,
+		req.body.buildCommand,
+		req.body.mainBranch,
+		req.body.period
+	);
+
+	process.conf = {
+		repoName: req.body.repoName,
+		buildCommand: req.body.buildCommand,
+		mainBranch: req.body.mainBranch,
+		period: req.body.period,
+		lastCommit: process.conf.lastCommit
+	};
+
+	if (response.status !== 200) {
+		return res.status(response.status).send(response.statusText);
+	}
 
     if (resCommand.status === 200) {
         const firstCommit = await GitCommand.getFirstCommit();
         ShriApiClient.postBuildRequest(...Object.values(firstCommit))
             .then((response) => {
+				process.conf.lastCommit = firstCommit.commitHash;
                 console.log(response);
             });
 
@@ -65,34 +86,41 @@ router.post('/settings', express.json(), async (req, res) => {
         }
     }
 
-    res.send(response);
+    res.send(response.data);
 });
 
 router.get('/builds', (req, res) => {
-    ShriApiClient.getBuildList()
+    ShriApiClient.getBuildList(Number(req.query.offset),Number(req.query.limit))
         .then((response) => {
             if (response.status !== 200) {
                 return res.status(response.status).send(response.statusText);
             }
 
-            res.send(response.data);
+            res.send(response.data.data);
         });
 });
 
-router.post('/builds/:buildId', express.json(), (req, res) => {
-    ShriApiClient.postBuildRequest(
-        req.body.commitMessage,
-        req.params.buildId,
-        req.body.branchName,
-        req.body.authorName
-    )
-        .then((response) => {
-            if (response.status !== 200) {
-                return res.status(response.status).send(response.statusText);
-            }
+router.post('/builds/:commitHash', express.json(), async (req, res) => {
+	const { params } = req;
+	const { commitHash } = params;
+  
+	if (commitHash === undefined) {
+		return res.status(400).send('Commit hash in params not valid')
+	}
+	const commitData = await GitCommand.getCommit(commitHash);
+	
+	if(commitData){
+		ShriApiClient.postBuildRequest(...Object.values(commitData))
+			.then((response) => {
+				if (response.status !== 200) {
+					return res.status(response.status).send(response.statusText);
+				}
 
-            res.send(response);
-        });
+				res.send(response.data.data);
+			});
+	}else{
+		return res.status(400).send('Commit hash not found')
+	}
 });
 
 router.get('/builds/:buildId', (req, res) => {
@@ -102,7 +130,7 @@ router.get('/builds/:buildId', (req, res) => {
                 return res.status(response.status).send(response.statusText);
             }
 
-            res.send(response);
+            res.send(response.data.data);
         });
 });
 
@@ -113,7 +141,7 @@ router.get('/builds/:buildId/logs', (req, res) => {
                 return res.status(response.status).send(response.statusText);
             }
 
-            res.send(response);
+            res.send(response.data);
         });
 });
 
