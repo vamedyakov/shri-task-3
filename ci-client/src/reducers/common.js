@@ -1,10 +1,9 @@
 import {
   APP_LOAD,
-  REDIRECT,
   DETAILS_PAGE_LOADED
 } from '../constants/actionTypes';
 
-const defaultState = {
+export const defaultStateCommon = {
   userConfig: {
     repoName: '',
     buildCommand: '',
@@ -13,13 +12,13 @@ const defaultState = {
   }
 };
 
-export default (state = defaultState, action) => {
+export default (state = defaultStateCommon, action) => {
   switch (action.type) {
     case APP_LOAD:
       return {
         ...state,
         appLoaded: true,
-        userConfig: (action.userConf && Object.keys(action.userConf).length > 0) ? action.userConf : defaultState.userConfig
+        userConfig: (action.userConf && Object.keys(action.userConf).length > 0) ? action.userConf : defaultStateCommon.userConfig
       };
     case DETAILS_PAGE_LOADED:
       return {
@@ -27,8 +26,6 @@ export default (state = defaultState, action) => {
         build: action.build ? action.build : null,
         log: action.log ? action.log : null
       };
-    case REDIRECT:
-      return { ...state, redirectTo: null };
     default:
       return state;
   }

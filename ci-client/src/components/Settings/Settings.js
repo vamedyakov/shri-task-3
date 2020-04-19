@@ -109,7 +109,7 @@ class Settings extends React.Component {
         return (!error && this.state.formErrors.length > 0 ? 'form__item_error' : '');
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.props.onLoad();
         if(this.props.userConfig){
             if(this.props.userConfig.repoName.length > 0){

@@ -8,15 +8,21 @@
     },
     "license": "ISC",
     "scripts": {
-        "start": "set PORT=3001 node app.js"
+        "start": "node app.js",
+        "test": "mocha ./test"
     },
     "devDependencies": {},
     "dependencies": {
         "axios": "^0.19.2",
+        "axios-mock-adapter": "^1.18.1",
         "cache-manager": "^3.2.0",
         "cache-manager-fs-hash": "0.0.7",
+        "chai": "^4.2.0",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
-        "nodegit": "^0.26.5"
+        "mocha": "^7.1.1",
+        "nodegit": "^0.26.5",
+        "rimraf": "^3.0.2",
+        "sinon": "^9.0.2"
     }
 }

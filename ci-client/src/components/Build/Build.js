@@ -16,7 +16,6 @@ let BuildStatus = {
 
 export function Build({ additional, data }) {
     if (data) {
-        console.log(data);
         let status = BuildStatus[data.status];
         const build = classNames({
             [`${additional}`]: additional,

@@ -16,9 +16,9 @@ export function Header({ menu, details, history, onClick, title, sizeTitle, view
                 <h1 className={headerTitleClass}>{title}</h1>
                 {menu ?
                     <div className='header__menu'>
-                        {details ? <Button text="Rebuild" onClick={onClick} type="small" elIcon="button" icon="rebuild" /> : ""}
-                        {history ? <Button text="Run build" onClick={onClick} type="small" elIcon="button" icon="run-build" /> : ""}
-                        {(details || history) ? <Button type="small" to="/settings" elIcon="button" icon="settings" only /> : <Button text="Settings" to="/settings" type="small" elIcon="button" icon="settings" />}
+                        {details ? <Button text="Rebuild" onClick={onClick} type="small" elIcon="button" icon="rebuild"  additional="rebuild-icon" /> : ""}
+                        {history ? <Button text="Run build" onClick={onClick} type="small" elIcon="button" icon="run-build" additional="run-build-icon" /> : ""}
+                        {(details || history) ? <Button type="small" to="/settings" elIcon="button" icon="settings" additional="info-settings-icon" only /> : <Button text="Settings" to="/settings" type="small" elIcon="button" icon="settings"  additional="info-settings-icon" />}
                     </div>
                     : ""}
             </div>

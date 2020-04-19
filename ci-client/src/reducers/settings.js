@@ -3,12 +3,12 @@ import {
   SETTINGS_SUBMIT_FORM
 } from '../constants/actionTypes';
 
-const defaultState = {
+export const defaultStateSettings = {
   inProgress: false,
 };
 
 
-export default (state = defaultState, action) => {
+export default (state = defaultStateSettings, action) => {
   switch (action.type) {
     case SETTINGS_SAVED:
       return {

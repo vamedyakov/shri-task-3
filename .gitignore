@@ -13,6 +13,5 @@ _config.yml
 node_modules
 dist
 yarn.lock
-package-lock.json
 /repositories
 /cache

@@ -1,11 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { BrowserRouter as Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Switch, Route, Router } from 'react-router-dom';
 
 import { APP_LOAD } from '../../constants/actionTypes';
 
 import ciServer from '../../api/ciServer';
-
+import { createBrowserHistory } from 'history';
 
 import { Header } from '../Header/Header';
 import { Footer } from '../Footer/Footer';
@@ -14,6 +14,8 @@ import Settings from '../Settings/Settings';
 import History from '../History/History';
 import Details from '../Details/Details';
 import './App.scss';
+
+const history = createBrowserHistory();
 
 const mapStateToProps = state => {
   return {
@@ -29,7 +31,7 @@ const mapDispatchToProps = dispatch => ({
 });
 
 class App extends React.Component {
-  componentWillMount() {
+  componentDidMount() {
     ciServer.getSettings()
       .then(res => {
         this.props.onLoad(res.data);
@@ -40,12 +42,14 @@ class App extends React.Component {
     if (this.props.appLoaded) {
       return (
         <div className="app">
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/settings" component={Settings} />
-            <Route path='/history' component={History} />
-            <Route path='/build/:id' component={Details} />
-          </Switch>
+          <Router history={history}>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/settings" component={Settings} />
+              <Route path='/history' component={History} />
+              <Route path='/build/:id' component={Details} />
+            </Switch>
+          </Router>
           <Footer />
         </div>
       );

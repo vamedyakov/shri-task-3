@@ -3,14 +3,16 @@ const nodegit = require("nodegit");
 const ShriApiClient = require('./ShriApiClient');
 const util = require("util");
 const exec = util.promisify(require("child_process").exec);
+const fs = require('fs'); 
+const rimraf = require('rimraf');
 
-const removeRep = async () => {
-    try {
-        await exec(`rm -rf ./repositories/*`)
-        return "ok";
-    } catch (e) {
-        return e;
-    }
+const removeRep = async (folder) => {
+    return new Promise(async (res, rej) => {
+        const path = (folder) ? `./repositories/${folder}`: './repositories/*';
+        rimraf(path, function () { 
+            res('ok');
+         });
+    });
 }
 
 const gitEvent = async () => {
@@ -28,12 +30,21 @@ const gitEvent = async () => {
     }
 }
 
+const getPath = () => {
+	const repProj = process.conf.repoName.split('/');
+	
+	return path.resolve(__dirname, '../repositories/' + repProj[repProj.length - 1]);
+}
+
 const checkLog = () => {
     return new Promise(async (res, rej) => {
         const newCommit = [];
         let lastCommitHash = process.conf.lastCommit;
-        const repProj = process.conf.repoName.split('/');
-        const pathRep = path.resolve(__dirname, '../repositories/' + repProj[repProj.length - 1]);
+		const pathRep = getPath();
+		
+		if(!fs.existsSync(pathRep)){
+			clone(process.conf.repoName);
+		}
 
         const repo = await nodegit.Repository.open(path.resolve(pathRep, ".git"));
         await repo.fetchAll();
@@ -61,14 +72,19 @@ const checkLog = () => {
             history.on("end", function (commits) {
                 res(newCommit);
             });
+        }else{
+            rej('lastCommitHash empty')
         }
     });
 }
 
 const getCommit = (commitHash) => {
     return new Promise(async (res, rej) => {
-        const repProj = process.conf.repoName.split('/');
-        const pathRep = path.resolve(__dirname, '../repositories/' + repProj[repProj.length - 1]);
+		const pathRep = getPath();
+		
+		if(!fs.existsSync(pathRep)){
+			clone(process.conf.repoName);
+		}
 
         const repo = await nodegit.Repository.open(path.resolve(pathRep, ".git"));
         await repo.fetchAll();
@@ -78,7 +94,6 @@ const getCommit = (commitHash) => {
         if (commitHash) {
             let history = firstCommit.history(nodegit.Revwalk.SORT.TIME);
             history.start();
-
             history.on("commit", function (commit) {
                 if (commit.sha() === commitHash) {
                     history.removeAllListeners('commit');
@@ -94,14 +109,19 @@ const getCommit = (commitHash) => {
             history.on("end", function (commits) {
                 res(null);
             });
+        }else{
+            rej('commitHash empty')
         }
     });
 }
 
 const getFirstCommit = async () => {
-    const repProj = process.conf.repoName.split('/');
-    const pathRep = path.resolve(__dirname, '../repositories/' + repProj[repProj.length - 1]);
-
+    const pathRep = getPath();
+		
+	if(!fs.existsSync(pathRep)){
+		res = await clone(process.conf.repoName);
+	}
+	
     const repo = await nodegit.Repository.open(path.resolve(pathRep, ".git"));
     const firstCommit = await repo.getBranchCommit(process.conf.mainBranch);
 
@@ -125,11 +145,15 @@ const clone = async (name) => {
     if (repProj.length > 1) {
 
         if (process.conf.repoName !== name) {
-            const rm = await removeRep();
+            const rm = await removeRep(repProj[repProj.length - 1]);
         }
 
         const pathRep = path.resolve(__dirname, '../repositories/' + repProj[repProj.length - 1]);
-
+		
+		if(!fs.existsSync(path.resolve(__dirname, '../repositories/'))){
+			fs.mkdirSync(path.resolve(__dirname, '../repositories/'));
+		}
+		
         try {
             res = await nodegit.Clone(`https://github.com/${name}`, pathRep);
         } catch (err) {
@@ -149,4 +173,4 @@ const clone = async (name) => {
 };
 
 
-module.exports = { gitEvent, checkLog, getFirstCommit, clone, getCommit }
+module.exports = { gitEvent, checkLog, getFirstCommit, clone, getCommit, removeRep }
