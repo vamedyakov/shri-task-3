@@ -33,7 +33,7 @@ module.exports.getSettings = async (_, res) => {
 
 module.exports.postSettings = async (req, res) => {
     const { body } = req;
-
+    
     const resCommand = await GitCommand.clone(body.repoName);
 
     if (process.conf.repoName !== body.repoName) {
@@ -151,11 +151,7 @@ module.exports.getBuildLog = async (req, res) => {
             return res.status(500).send(statusText);
         }
 
-        if ('data' in data) {
-            return res.status(200).send(data.data);
-        }
-
-        res.status(204).send('no content');
+        return res.status(200).send(data);
     }
 }
 

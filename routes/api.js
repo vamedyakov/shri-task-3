@@ -15,7 +15,7 @@ router.post('/settings', express.json(), controller.postSettings);
 
 router.get('/builds', controller.getBuilds);
 
-router.post('/builds/:commitHash', express.json(), controller.postSettings);
+router.post('/builds/:commitHash', express.json(), controller.postAddInstQueue);
 
 router.get('/builds/:buildId', controller.getBuildId);
 
