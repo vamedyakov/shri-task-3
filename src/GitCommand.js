@@ -1,8 +1,6 @@
 const path = require('path');
 const nodegit = require("nodegit");
 const ShriApiClient = require('./ShriApiClient');
-const util = require("util");
-const exec = util.promisify(require("child_process").exec);
 const fs = require('fs'); 
 const rimraf = require('rimraf');
 
@@ -38,6 +36,7 @@ const getPath = () => {
 
 const checkLog = () => {
     return new Promise(async (res, rej) => {
+        console.log(process.conf);
         const newCommit = [];
         let lastCommitHash = process.conf.lastCommit;
 		const pathRep = getPath();
@@ -73,7 +72,7 @@ const checkLog = () => {
                 res(newCommit);
             });
         }else{
-            rej('lastCommitHash empty')
+            res(newCommit);
         }
     });
 }
