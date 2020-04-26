@@ -9,7 +9,6 @@ import { Button } from '../Button/Button';
 
 import {
   HOME_PAGE_LOADED,
-  REDIRECT
 } from '../../constants/actionTypes';
 
 
@@ -20,16 +19,13 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   onLoad: () =>
     dispatch({ type: HOME_PAGE_LOADED,}),
-    onRedirect: () =>
-    dispatch({  type: REDIRECT }),
 });
 
 class Home extends React.Component {
 
-  componentWillMount() {
+  componentDidMount() {
     if (this.props.userConfig.repoName){
       this.props.history.push("/history");
-      this.props.onRedirect();
     }else{
       this.props.onLoad();
     }

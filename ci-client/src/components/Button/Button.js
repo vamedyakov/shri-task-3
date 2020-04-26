@@ -16,14 +16,14 @@ export class Button extends React.Component {
 
         if (to) {
             return (
-                <Link to={to} onClick={onClick} className={buttonClass}>
+                <Link data-testid={additional} to={to} onClick={onClick} className={buttonClass}>
                     {icon ? <Icon type={icon} el={elIcon} only={only} /> : ""}
                     <span className="button__text">{text}</span>
                 </Link>
             );
         } else {
             return (
-                <button onClick={onClick} className={buttonClass} disabled={disabled}>
+                <button data-testid={additional} onClick={onClick} className={buttonClass} disabled={disabled}>
                     {icon ? <Icon type={icon} el={elIcon} only={only} /> : ""}
                     <span className="button__text">{text}</span>
                 </button>

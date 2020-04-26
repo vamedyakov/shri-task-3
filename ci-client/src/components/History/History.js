@@ -48,8 +48,8 @@ class History extends React.Component {
             });
     }
 
-    componentWillMount() {
-        if(this.props.buildsList.length === 0){
+    componentDidMount() {
+        if(this.props.buildsList && this.props.buildsList.length === 0){
             ciServer.getBuilds(this.props.offset, this.props.limit)
                 .then(res => {
                     if (res.data) {

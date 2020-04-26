@@ -5,7 +5,7 @@ import {
     HISTORY_RELOAD
 } from '../constants/actionTypes';
 
-const defaultState = {
+export const defaultStateHistory = {
     offset: 0,
     limit: 5,
     stepShow: 5,
@@ -14,7 +14,7 @@ const defaultState = {
     buildsList: []
 };
 
-export default (state = defaultState, action) => {
+export default (state = defaultStateHistory, action) => {
     switch (action.type) {
         case HISTORY_PAGE_LOADED:
             return {
@@ -37,8 +37,8 @@ export default (state = defaultState, action) => {
             return {
                 ...state,
                 buildsList: [...action.buildsList],
-                hideMore: defaultState.hideMore,
-                offset: defaultState.offset+state.stepShow
+                hideMore: action.buildsList.length > 0 ? false : true,
+                offset: defaultStateHistory.offset+state.stepShow
             };
         default:
             return state;
