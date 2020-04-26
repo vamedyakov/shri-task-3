@@ -1,0 +1,44 @@
+{
+    "name": "shri-task-3",
+    "description": "shri-task-3",
+    "author": "Vladimir Medyakov",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/vamedyakov/shri-task-3.git"
+    },
+    "license": "ISC",
+    "scripts": {
+        "start": "TS_NODE_FILES=1 ts-node server.ts -r ts-node/register --ignore",
+        "watch": "TS_NODE_FILES=1 nodemon server.ts -r ts-node/register --ignore",
+        "watch:windows": "set TS_NODE_FILES=1 && nodemon server.ts -r ts-node/register --ignore",
+        "test": "mocha ./test"
+    },
+    "devDependencies": {
+        "@types/chai": "^4.2.11",
+        "@types/sinon": "^9.0.0"
+    },
+    "dependencies": {
+        "@types/cors": "^2.8.6",
+        "@types/express": "^4.17.6",
+        "@types/express-serve-static-core": "^4.17.5",
+        "@types/mocha": "^7.0.2",
+        "@types/node": "^13.13.2",
+        "@types/nodegit": "^0.26.2",
+        "@types/rimraf": "^3.0.0",
+        "axios": "^0.19.2",
+        "axios-mock-adapter": "^1.18.1",
+        "cache-manager": "^3.2.0",
+        "cache-manager-fs-hash": "0.0.7",
+        "chai": "^4.2.0",
+        "cors": "^2.8.5",
+        "dotenv": "^8.2.0",
+        "express": "^4.17.1",
+        "mocha": "^7.1.1",
+        "nodegit": "^0.26.5",
+        "nodemon": "^2.0.3",
+        "rimraf": "^3.0.2",
+        "sinon": "^9.0.2",
+        "ts-node": "^8.9.1",
+        "typescript": "^3.8.3"
+    }
+}

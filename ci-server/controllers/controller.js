@@ -16,7 +16,7 @@ class Controller {
     const { body } = req;
     const { port } = body;
     if (req.hostname === undefined || port === undefined) {
-      return res.status(500).send('bad request');
+      return res.status(400).send('bad request');
     }
 
     if (this.agents.add({ ...body, host: req.hostname })) {
