@@ -4,7 +4,7 @@ import fs from 'fs';
 import Store from "../utils/Store";
 import nodeGit from "nodegit";
 import rimraf from "rimraf";
-import {QueueBuildInput} from '../../typings/api/models';
+import {QueueBuildInput} from '../typings/api/models';
 
 const removeRep = async (folder: string): Promise<string> => {
     return new Promise(async (resolve, _) => {

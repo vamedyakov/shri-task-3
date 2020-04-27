@@ -1,6 +1,6 @@
 import {
     ConfigurationInput
-} from '../../typings/api/models';
+} from '../typings/api/models';
 
 interface store extends ConfigurationInput {
     lastCommit: string;

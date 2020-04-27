@@ -4,7 +4,7 @@ import './History.scss';
 import '../Text/Text.scss';
 import '../Layout/Layout.scss';
 import { Header } from '../Header/Header';
-import BuildsList from '../Build/BuildsList';
+import BuildList from '../Build/BuildList';
 import PopUp from '../PopUp/PopUp';
 import ciServer from '../../api/ciServer';
 
@@ -21,8 +21,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-    onLoad: (buildsList) =>
-        dispatch({ type: HISTORY_PAGE_LOADED, buildsList }),
+    onLoad: (buildList) =>
+        dispatch({ type: HISTORY_PAGE_LOADED, buildList }),
     onShowPopUp: () =>
         dispatch({ type: HISTORY_SHOW_POPUP }),
     onhidePopUp: () =>
@@ -39,7 +39,7 @@ class History extends React.Component {
         this.props.onhidePopUp();
     }
 
-    handleShowMore() {      
+    handleShowMore() {
         ciServer.getBuilds(this.props.offset, this.props.limit)
             .then(res => {
                 if (res.data) {
@@ -49,7 +49,8 @@ class History extends React.Component {
     }
 
     componentDidMount() {
-        if(this.props.buildsList && this.props.buildsList.length === 0){
+        console.log(this.props);
+        if(this.props.buildList && this.props.buildList.length === 0){
             ciServer.getBuilds(this.props.offset, this.props.limit)
                 .then(res => {
                     if (res.data) {
@@ -65,7 +66,7 @@ class History extends React.Component {
                 <Header title={this.props.userConfig.repoName} onClick={this.showPopUp.bind(this)} menu history sizeTitle="xxxl" />
                 <div className="layout">
                     <div className="layout__container">
-                        <BuildsList buildsList={this.props.buildsList} hideMore={this.props.hideMore} onClick={this.handleShowMore.bind(this)} />
+                        <BuildList list={this.props.buildList} hideMore={this.props.hideMore} onClick={this.handleShowMore.bind(this)} />
                     </div>
                 </div>
                 {this.props.toggle ? <PopUp onClose={this.hidePopUp.bind(this)} /> : null}

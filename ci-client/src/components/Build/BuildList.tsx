@@ -3,12 +3,12 @@ import { Button } from '../Button/Button';
 import { Link } from 'react-router-dom';
 import React from 'react';
 
-const BuildsList = props => {
-    if (props.buildsList) {
+const BuildList = props => {
+    if (props.list) {
         return (
             <div className="list">
                 {
-                    props.buildsList.map(build => {
+                    props.list.map(build => {
                         const buildLink = `/build/${build.id}/`
                         return (
                             <Link key={build.id} to={buildLink} className="build__link">
@@ -36,4 +36,4 @@ const BuildsList = props => {
     );
 };
 
-export default BuildsList;
+export default BuildList;

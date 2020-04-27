@@ -9,6 +9,7 @@
     "license": "ISC",
     "scripts": {
         "start": "TS_NODE_FILES=1 ts-node server.ts -r ts-node/register --ignore",
+        "start:windows": "set TS_NODE_FILES=1 && ts-node server.ts -r ts-node/register --ignore",
         "watch": "TS_NODE_FILES=1 nodemon server.ts -r ts-node/register --ignore",
         "watch:windows": "set TS_NODE_FILES=1 && nodemon server.ts -r ts-node/register --ignore",
         "test": "mocha ./test"

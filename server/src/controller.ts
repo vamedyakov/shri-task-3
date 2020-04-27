@@ -6,7 +6,7 @@ import {
     ConfigurationInput,
     ConfigurationModel,
     BuildModel
-} from '../../typings/api/models';
+} from '../typings/api/models';
 
 import GitCommand from './GitCommand';
 

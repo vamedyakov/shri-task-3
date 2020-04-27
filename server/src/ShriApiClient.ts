@@ -12,7 +12,7 @@ import {
     StartBuildInput,
     ConfigurationInput,
     ConfigurationModelHomeworkApiResponse
-} from '../../typings/api/models';
+} from '../typings/api/models';
 
 class ShriApiClient extends Api {
 
