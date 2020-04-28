@@ -2,7 +2,15 @@ import React from 'react';
 import classNames from 'classnames';
 import './Icon.scss';
 
-export function Icon({ type, name, el, only, onClick }) {
+interface IconProps {
+    type?: string;
+    name?: string;
+    el?: string;
+    only?: boolean;
+    onClick?: (event: React.MouseEvent) => void;
+}
+
+export function Icon({type, name, el, only, onClick}: IconProps) {
 
     const iconClass = classNames({
         [`icon_${type}`]: type,

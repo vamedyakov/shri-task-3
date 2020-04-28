@@ -4,19 +4,28 @@ import { Icon } from '../Icon/Icon';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale'
 import './Build.scss';
-import '../Text/Text.scss';
+import {
+    BuildStatus,
+    BuildModel
+} from '../../typings/api/models';
 
-let BuildStatus = {
-    Waiting: "processing",
-    InProgress: "processing",
-    Success: "completed",
-    Fail: "fail",
-    Canceled: "fail",
+
+let BuildStatusCss = {
+    [BuildStatus.Waiting]: "processing",
+    [BuildStatus.InProgress]: "processing",
+    [BuildStatus.Success]: "completed",
+    [BuildStatus.Fail]: "fail",
+    [BuildStatus.Canceled]: "fail",
 }
 
-export function Build({ additional, data }) {
+interface BuildProps {
+    additional: string;
+    data?: BuildModel
+}
+
+export function Build({ additional, data } : BuildProps) {
     if (data) {
-        let status = BuildStatus[data.status];
+        let status = BuildStatusCss[data.status];
         const build = classNames({
             [`${additional}`]: additional,
         }, "build");
@@ -49,6 +58,6 @@ export function Build({ additional, data }) {
             </div>
         );
     } else {
-        return (<div></div>);
+        return (<div/>);
     }
 }

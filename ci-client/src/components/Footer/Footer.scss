@@ -1,46 +1,46 @@
 @import '../../constants.scss';
 
 .footer {
-    min-width: 320px;
-    background-color: var(--color-bg-footer);
-    
-    &__content {
-        display: flex;
-        justify-content: space-between;
-        max-width: 1024px;
-        margin: 0 auto;
-        padding: 7px 100px;
-        
-        @media screen and (max-width: $screen-s) {
-            flex-direction: column;
-            padding: 12px 20px;
-        }
+  min-width: 320px;
+  background-color: var(--color-bg-footer);
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 7px 100px;
+
+    @media screen and (max-width: $screen-s) {
+      flex-direction: column;
+      padding: 12px 20px;
+    }
+  }
+
+  &__menu {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li {
+      display: block;
+      margin-right: var(--space-m);
     }
 
-    &__menu {
-        display: flex;
-        list-style: none;
-        margin: 0;
-        padding: 0;
+    &-link {
+      display: block;
+      text-decoration: none;
 
-        > li {
-            display: block;
-            margin-right: var(--space-m);
-        }
-
-        &-link {
-            display: block;
-            text-decoration: none;
-
-            &:hover {
-                color: var(--color-link-hover);
-            }
-        }
+      &:hover {
+        color: var(--color-link-hover);
+      }
     }
+  }
 
-    &__text {
-        @media screen and (max-width: $screen-s) {
-            margin-top: var(--space-xs);
-        }
+  &__text {
+    @media screen and (max-width: $screen-s) {
+      margin-top: var(--space-xs);
     }
+  }
 }

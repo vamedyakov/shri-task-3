@@ -1,43 +1,55 @@
+import {actionTypes} from '../constants/actionTypes';
 import {
-    HISTORY_PAGE_LOADED,
-    HISTORY_SHOW_POPUP,
-    HISTORY_HIDE_POPUP,
-    HISTORY_RELOAD
-} from '../constants/actionTypes';
+    BuildModel
+} from '../typings/api/models';
 
-export const defaultStateHistory = {
+export interface initialStateHistory {
+    offset: number;
+    limit: number;
+    stepShow: number;
+    toggle: boolean;
+    hideMore: boolean;
+    buildList: Array<BuildModel>;
+}
+
+export const defaultStateHistory: initialStateHistory = {
     offset: 0,
     limit: 5,
     stepShow: 5,
     toggle: false,
     hideMore: false,
-    buildsList: []
+    buildList: []
 };
 
-export default (state = defaultStateHistory, action) => {
+interface historyActions {
+    type: actionTypes,
+    buildList: Array<BuildModel>;
+}
+
+export default (state = defaultStateHistory, action: historyActions) => {
     switch (action.type) {
-        case HISTORY_PAGE_LOADED:
+        case 'HISTORY_PAGE_LOADED':
             return {
                 ...state,
-                buildsList: [...state.buildsList, ...action.buildsList],
-                hideMore: action.buildsList.length > 0 ? false : true,
+                buildList: [...state.buildList, ...action.buildList],
+                hideMore: action.buildList.length <= 0,
                 offset: state.offset+state.stepShow
             };
-        case HISTORY_SHOW_POPUP:
+        case 'HISTORY_SHOW_POPUP':
             return {
                 ...state,
                 toggle: true
             };
-        case HISTORY_HIDE_POPUP:
+        case 'HISTORY_HIDE_POPUP':
             return {
                 ...state,
                 toggle: false
             };
-        case HISTORY_RELOAD:
+        case 'HISTORY_RELOAD':
             return {
                 ...state,
-                buildsList: [...action.buildsList],
-                hideMore: action.buildsList.length > 0 ? false : true,
+                buildList: [...action.buildList],
+                hideMore: action.buildList.length <= 0,
                 offset: defaultStateHistory.offset+state.stepShow
             };
         default:

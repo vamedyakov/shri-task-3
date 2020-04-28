@@ -1,11 +1,28 @@
 import React from 'react';
 import classNames from 'classnames';
-import { Icon } from '../Icon/Icon';
+import {Icon} from '../Icon/Icon';
 import './Input.scss';
-import '../Text/Text.scss';
 
+export interface FormControlEventTarget extends EventTarget {
+    value: string;
+    name: string;
+}
 
-export function Input({ labelText, onChange, name, placeholder, maxlength, require, closeBtn, closeBtnOnClick, value, type = "text", inputClass }) {
+interface InputProps {
+    labelText?: string;
+    onChange?: (event: React.ChangeEvent<FormControlEventTarget>) => void;
+    name?: string;
+    placeholder?: string;
+    maxlength?: number;
+    require?: boolean;
+    closeBtn?: boolean;
+    closeBtnOnClick?: (event: React.MouseEvent) => void;
+    value: string;
+    type?: string;
+    inputClass?: string;
+}
+
+export function Input({labelText, onChange, name, placeholder, maxlength, require, closeBtn, closeBtnOnClick, value = "", type = "text", inputClass}: InputProps) {
     const inputControl = classNames('input__control', {
         [`input__control_type_${inputClass}`]: inputClass
     });
@@ -28,7 +45,7 @@ export function Input({ labelText, onChange, name, placeholder, maxlength, requi
                     value={value}
                     required={require}
                 />
-                {closeBtn ? <Icon type="close" name={name} on el="input" onClick={closeBtnOnClick} /> : ""}
+                {closeBtn ? <Icon type="close" name={name} el="input" onClick={closeBtnOnClick}/> : ""}
             </div>
         </div>
     );

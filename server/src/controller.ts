@@ -8,6 +8,7 @@ import {
     BuildModel
 } from '../typings/api/models';
 
+import cacheBuildLogs from '../utils/CacheBuildLogs';
 import GitCommand from './GitCommand';
 
 export const getSettings = async (_: Request, res: Response<ConfigurationModel | string>) => {
@@ -28,7 +29,11 @@ export const getSettings = async (_: Request, res: Response<ConfigurationModel |
 
 export const postSettings = async (req: Request<{}, any, ConfigurationInput>, res: Response<string>) => {
     const {body} = req;
-
+	
+	if(!(typeof body.repoName === 'string' && (body.repoName as string).length > 0)){
+        return res.status(500).send('Empty Request body');
+	}
+	
     const resClone = await GitCommand.clone(body.repoName);
 
     if (Store.dataStore.repoName !== body.repoName) {
@@ -99,9 +104,17 @@ export const getBuildLog = async (req: Request, res: Response<string>) => {
     }
 
     try {
-        const data = await ShriApiClient.getBuildLog(buildId);
+        const cache = await cacheBuildLogs.get(buildId);
 
-        return res.status(200).send(data);
+        if(cache){
+            return res.status(200).send(cache);
+        } else {
+            const data = await ShriApiClient.getBuildLog(buildId);
+
+            await cacheBuildLogs.set(buildId, data);
+
+            return res.status(200).send(data);
+        }
     } catch (err) {
         return res.status(500).send(err.toString());
     }

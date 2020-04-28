@@ -1,12 +1,16 @@
-import { HOME_PAGE_LOADED, HOME_PAGE_UNLOADED } from '../constants/actionTypes';
+import {actionTypes} from '../constants/actionTypes';
 
-export default (state = {}, action) => {
+interface settingsActions {
+  type: actionTypes,
+}
+
+export default (state = {}, action: settingsActions) => {
   switch (action.type) {
-    case HOME_PAGE_LOADED:
+    case 'HOME_PAGE_LOADED':
       return {
         ...state,
       };
-    case HOME_PAGE_UNLOADED:
+    case 'HOME_PAGE_UNLOADED':
       return {};
     default:
       return state;

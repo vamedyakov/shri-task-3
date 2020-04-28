@@ -1,127 +1,167 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import './PopUp.scss';
-import { Input } from '../Input/Input';
-import { Button } from '../Button/Button';
-import { FormErrors } from '../FormErrors/FormErrors';
-
-import ciServer from '../../api/ciServer';
-
+import {Dispatch} from 'redux';
+import {connect} from 'react-redux';
+import {History} from 'history';
+import {FormErrors} from '../FormErrors/FormErrors';
+import WebApiClient from '../../api/WebApiClient';
+import {actionTypes} from '../../constants/actionTypes';
+import {initialStateHistory} from '../../reducers/history';
 import {
-    HISTORY_RELOAD,
-} from '../../constants/actionTypes';
+    BuildModel,
+    BuildRequestResultModel
+} from '../../typings/api/models';
 
-const mapStateToProps = state => ({
-  ...state.history,
-  userConfig: state.common.userConfig
+import {Input} from '../Input/Input';
+import {Button} from '../Button/Button';
+
+import './PopUp.scss';
+
+interface stateProps {
+    historyPage: initialStateHistory;
+}
+
+interface stateLocal {
+    commitHash: string;
+    commitHashValid: boolean;
+    formValid: boolean;
+    formErrors: Array<string>;
+}
+
+const mapStateToProps = ({historyPage}: stateProps) => ({
+    ...historyPage
 });
 
-const mapDispatchToProps = dispatch => ({
-  onReload: (buildsList) =>
-      dispatch({ type: HISTORY_RELOAD, buildsList }),
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    onReload: (buildsList: Array<BuildModel>) =>
+        dispatch({type: actionTypes.HISTORY_RELOAD, buildsList}),
 });
 
-class PopUp extends React.Component {
-  constructor(props) {
-    super(props);
+interface Props extends initialStateHistory {
+    onReload(buildList: Array<BuildModel>): void;
 
-    this.state = {
-      commitHash: '',
+    onClose(): void;
 
-      commitHashValid: false,
-      formValid: false,
+    history?: History;
+}
 
-      formErrors: [],
+export interface FormControlEventTarget extends EventTarget {
+    value: string;
+    name: string;
+}
+
+class PopUp extends React.Component<Props> {
+    public state: stateLocal;
+
+    constructor(props: Props) {
+        super(props);
+
+        this.state = {
+            commitHash: '',
+            commitHashValid: false,
+            formValid: false,
+            formErrors: [],
+        } as stateLocal;
     }
-  }
 
-  handleUserInput = (event) => {
-      const { name, value } = event.target;
+    handleUserInput = (event: React.ChangeEvent<FormControlEventTarget>) => {
+        const {name, value} = (event.target as FormControlEventTarget);
 
-      this.setState({ [name]: value },
-          () => { this.validateField(name, value) });
-  }
+        if (name) {
+            this.setState({[name]: value},
+                () => {
+                    this.validateField(name, value)
+                });
+        }
+    }
 
-  handleResetField = event => {
-      event.preventDefault();
-      const name = event.target.getAttribute('data-name');
-      
-      this.setState({ [name]: '' },
-          () => { this.validateField(name, '') });
-  }
+    handleResetField = (event: React.MouseEvent) => {
+        event.preventDefault();
+        const name = event.currentTarget.getAttribute('data-name');
 
-  validateField(fieldName, value) {
-      let { formErrors } = this.state;
-      let valid = false;
+        if (name) {
+            this.setState({[name]: ''},
+                () => {
+                    this.validateField(name, '')
+                });
+        }
+    }
 
-      switch (fieldName) {
-        case 'commitHash':
-            valid = value.length > 0;
-            if(!valid) formErrors.push(fieldName+' is empty');
-            break;
-          default:
-              break;
-      }
+    validateField(fieldName: string, value?: string | null) {
+        let formErrors = new Set(this.state.formErrors);
+        let valid = false;
 
-      this.setState({ [fieldName + 'Valid']: valid, formErrors: formErrors }, this.validateForm);
-  }
+        switch (fieldName) {
+            case 'commitHash':
+                if (value) valid = value.length > 0;
+                if (!valid) formErrors.add(fieldName + ' is empty');
+                else formErrors.delete(fieldName + ' is empty');
+                break;
+            default:
+                break;
+        }
 
-  validateForm() {
-      this.setState({
-          formValid: this.state.commitHashValid
-      });
-  }
+        this.setState({[fieldName + 'Valid']: valid, formErrors: Array.from(formErrors)}, this.validateForm);
+    }
 
-  errorClass(error) {
-      return (!error && this.state.formErrors.length > 0 ? 'form__item_error' : '');
-  }
+    validateForm() {
+        this.setState({
+            formValid: this.state.commitHashValid
+        });
+    }
 
-  submit(e) {
-      e.preventDefault();
-      console.log(this.state);
-      if(this.state.formValid) {
-          let formErrors = [];
-          ciServer.postAddQueue(this.state).then(res => {
-              if(res.status !== 200){
-                  formErrors.push(res.data);
-              }else{
-                ciServer.getBuilds(0, this.props.limit)
-                    .then(response => {
-                        if (response.data) {
-                            this.props.onReload(response.data);
-                        }
-                        this.props.onClose();
-                        
-                        this.props.history.push(`/build/${response.data.id}/`);
-                    });
-              }
-              this.setState({formErrors: formErrors });
-          });
-      }
-  }
-  
-  render() {
-    return (
-      <div className='popup'>
-        <div className='popup__wrapper'>
-          <form className='popup__form' onSubmit={this.submit.bind(this)}>
-            <h3 className='popup__title'>New build</h3>
-            <p className='popup__description'>Enter the commit hash which you want to build.</p>
-            <FormErrors formErrors={this.state.formErrors} />
+    errorClass(error: boolean): string {
+        return (!error && this.state.formErrors.length > 0 ? 'form__item_error' : '');
+    }
 
-            <div className={`form__item ${this.errorClass(this.state.commitHashValid)}`}>
-              <Input name="commitHash" closeBtnOnClick={this.handleResetField} onChange={this.handleUserInput} value={this.state.commitHash} placeholder="Commit hash" closeBtn />
+    async submit(e: React.FormEvent) {
+        e.preventDefault();
+        if (this.state.formValid) {
+            let responseAddBuild: BuildRequestResultModel | undefined;
+            let formErrors = [];
+
+            try {
+                responseAddBuild = await WebApiClient.postAddBuildQueue(this.state.commitHash);
+                const response = await WebApiClient.getBuilds(this.props.offset, this.props.limit);
+
+                this.props.onReload(response);
+            } catch (err) {
+                formErrors.push(err.toString());
+            }
+            this.props.onClose();
+
+            if (this.props.history && responseAddBuild) {
+                this.props.history.push(`/build/${responseAddBuild.id}/`);
+            }
+
+            this.setState({formErrors: formErrors});
+        }
+    }
+
+    render() {
+        return (
+            <div className='popup'>
+                <div className='popup__wrapper'>
+                    <form className='popup__form' onSubmit={e => this.submit(e)}>
+                        <h3 className='popup__title'>New build</h3>
+                        <p className='popup__description'>Enter the commit hash which you want to build.</p>
+                        <FormErrors formErrors={this.state.formErrors}/>
+
+                        <div className={`form__item ${this.errorClass(this.state.commitHashValid)}`}>
+                            <Input name="commitHash" closeBtnOnClick={this.handleResetField}
+                                   onChange={this.handleUserInput} value={this.state.commitHash}
+                                   placeholder="Commit hash" closeBtn/>
+                        </div>
+
+                        <div className='popup__button-wrapper'>
+                            <Button text='Run build' disabled={!this.state.formValid} type="medium" action
+                                    additional="form"/>
+                            <Button text='Cancel' onClick={this.props.onClose} type="medium" additional="form"/>
+                        </div>
+                    </form>
+                </div>
             </div>
-
-            <div className='popup__button-wrapper'>
-              <Button text='Run build' disabled={!this.state.formValid} type="medium" action additional="form" />
-              <Button text='Cancel' onClick={this.props.onClose} type="medium" additional="form" />
-            </div>
-          </form>
-        </div>
-      </div>
-    )
-  }
+        )
+    }
 
 }
 

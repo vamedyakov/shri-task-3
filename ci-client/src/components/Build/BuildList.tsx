@@ -2,8 +2,17 @@ import { Build } from './Build';
 import { Button } from '../Button/Button';
 import { Link } from 'react-router-dom';
 import React from 'react';
+import {
+    BuildModel
+} from '../../typings/api/models';
 
-const BuildList = props => {
+interface BuildProps {
+    hideMore: boolean;
+    onClick(): void;
+    list: Array<BuildModel>;
+}
+
+const BuildList = (props: BuildProps) => {
     if (props.list) {
         return (
             <div className="list">

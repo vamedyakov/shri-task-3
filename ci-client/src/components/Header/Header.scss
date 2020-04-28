@@ -1,35 +1,36 @@
 @import '../../constants.scss';
+@import '../Text/Text.scss';
 
 .header {
 
-    &__content {
-        display: flex;
-        justify-content: space-between;
-        min-width: 320px;
-        max-width: 1024px;
-        margin: 0 auto;
-        padding: 10px 100px;
-        
-        @media screen and (max-width: $screen-s) {
-            padding: 12px 16px;
-        }
-    }
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    min-width: 320px;
+    max-width: 1024px;
+    margin: 0 auto;
+    padding: 10px 100px;
 
-    &__menu {
-        display: flex;
+    @media screen and (max-width: $screen-s) {
+      padding: 12px 16px;
     }
+  }
 
-    &__h1 {
-        display: flex;
-        flex-basis: 70%;
-        align-items: center;
-        font-style: normal;
-        font-weight: 500;
-        margin: 0;
-        
-        @media screen and (max-width: $screen-s) {
-            font-size: var(--size-text-2xl);
-            line-height: var(--line-height-text-xl);
-        }
+  &__menu {
+    display: flex;
+  }
+
+  &__h1 {
+    display: flex;
+    flex-basis: 70%;
+    align-items: center;
+    font-style: normal;
+    font-weight: 500;
+    margin: 0;
+
+    @media screen and (max-width: $screen-s) {
+      font-size: var(--size-text-2xl);
+      line-height: var(--line-height-text-xl);
     }
+  }
 }

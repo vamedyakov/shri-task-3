@@ -3,7 +3,6 @@
 # dependencies
 /node_modules
 dist
-yarn.lock
 /.pnp
 .pnp.js
 .DS_Store

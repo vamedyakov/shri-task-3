@@ -1,74 +1,78 @@
 @import '../../constants.scss';
 
 .button {
-    display: flex;
-    align-items: center;
-    background-color: var(--color-bg-control);
-    overflow: hidden;
+  display: flex;
+  align-items: center;
+  background-color: var(--color-bg-control);
+  overflow: hidden;
+  border: none;
+  cursor: pointer;
+  border-radius: var(--col-round);
+  outline: none;
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    background-color: var(--color-bg-control-hover);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 2px var(--color-bg-border-focus);
+  }
+
+  &:disabled {
+    cursor: no-drop;
     border: none;
-    cursor: pointer;
-    border-radius: var(--col-round);
-    outline: none;
-    text-decoration: none;
-    color: inherit;
+    box-shadow: none;
+    color: var(--color-typo-disabled);
+    background-color: var(--color-bg-disabled) !important;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+
+  &_small {
+    height: 28px;
+    padding: 0 13px;
+    font-size: var(--size-text-l);
+    line-height: var(--line-height-text-2xl);
+    margin-left: var(--space-xs);
+  }
+
+  &_medium {
+    padding: 10px 20px;
+    font-size: var(--size-text-l);
+  }
+
+  &_action {
+    background-color: var(--color-bg-action);
 
     &:hover {
-        background-color: var(--color-bg-control-hover);
+      background-color: var(--color-bg-action-hover);
     }
+
     &:focus {
-        box-shadow: 0 0 0 2px var(--color-bg-border-focus);
+      box-shadow: 0 0 0 2px var(--color-bg-action-focus);
     }
-    &:disabled {
-        cursor: no-drop;
-        border: none;
-        box-shadow: none;
-        color: var(--color-typo-disabled);
-        background-color: var(--color-bg-disabled) !important;
-    }
-    &[hidden] {
+  }
+
+  &__icon {
+    margin-right: 6px;
+    margin-left: -5px;
+
+    @media screen and (max-width: $screen-s) {
+      margin-right: -5px;
+      margin-left: -5px;
+
+      + .button__text {
         display: none;
+      }
     }
 
-    &_small {
-        height: 28px;
-        padding: 0 13px;
-        font-size: var(--size-text-l);
-        line-height: var(--line-height-text-2xl);
-        margin-left: var(--space-xs);
+    &_only {
+      margin-right: -5px;
+      margin-left: -5px;
     }
-
-    &_medium {
-        padding: 10px 20px;
-        font-size: var(--size-text-l);
-    }
-
-    &_action {
-        background-color: var(--color-bg-action);
-
-        &:hover {
-            background-color: var(--color-bg-action-hover);
-        }
-        &:focus {
-            box-shadow: 0 0 0 2px var(--color-bg-action-focus);
-        }
-    }
-
-    &__icon {
-        margin-right: 6px;
-        margin-left: -5px;
-
-        @media screen and (max-width: $screen-s) {
-            margin-right: -5px;
-            margin-left: -5px;
-
-            + .button__text {
-                display: none;
-            }
-        }
-
-        &_only {
-            margin-right: -5px;
-            margin-left: -5px;
-        }
-    }
+  }
 }

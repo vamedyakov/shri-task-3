@@ -2,13 +2,13 @@ import { combineReducers } from 'redux';
 import common from './reducers/common';
 import home from './reducers/home';
 import settings from './reducers/settings';
-import history from './reducers/history';
-import { routerReducer } from 'react-router-redux';
+import historyPage from './reducers/history';
+import details from './reducers/details';
 
 export default combineReducers({
   common,
   home,
   settings,
-  history,
-  router: routerReducer
+  historyPage,
+  details
 });

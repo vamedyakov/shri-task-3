@@ -97,7 +97,7 @@ const checkLog = (): Promise<Array<QueueBuildInput>> => {
 const getCommit = (commitHash: string): Promise<QueueBuildInput | null> => {
     return new Promise(async (res, rej) => {
         const firstCommit = await initNodeGit();
-
+		
         if (commitHash) {
             let history = firstCommit.history();
             history.start();

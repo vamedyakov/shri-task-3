@@ -1,9 +1,12 @@
 import React from 'react';
 import './FormErrors.scss';
 
-export const FormErrors = ({ formErrors }) => {
-    if(formErrors.length > 0) {
-        console.log(formErrors);
+interface FormErrorsProps {
+    formErrors: Array<string>;
+}
+
+export const FormErrors = ({formErrors}: FormErrorsProps) => {
+    if (formErrors.length > 0) {
         return (
             <div className='form__errors'>
                 {formErrors.map((fieldName, i) => {
@@ -15,7 +18,7 @@ export const FormErrors = ({ formErrors }) => {
         )
     } else {
         return (
-            <div></div>
+            <div/>
         )
     }
 }

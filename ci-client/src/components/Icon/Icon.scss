@@ -1,74 +1,73 @@
 .icon {
-    &::after {
-        content: "";
-        display: block;
-        background-size: 100%;
-    }
+  &::after {
+    content: "";
+    display: block;
+    background-size: 100%;
+  }
 
-    
-    &_settings::after {
-        width: 12px;
-        height: 12px;
-        background-image: url("../../img/settings.svg");
-    }
-    
-    &_run-build::after {
-        width: 9px;
-        height: 10px;
-        background-image: url("../../img/run.svg");
-    }
-    
-    &_rebuild::after {
-        width: 12px;
-        height: 12px;
-        background-image: url("../../img/rebuild.svg");
-    }
+  &_settings::after {
+    width: 12px;
+    height: 12px;
+    background-image: url("../../img/settings.svg");
+  }
 
-    &_close::after {
-        width: 16px;
-        height: 16px;
-        background-image: url("../../img/close.svg");
-    }
+  &_run-build::after {
+    width: 9px;
+    height: 10px;
+    background-image: url("../../img/run.svg");
+  }
 
-    &_branch::after {
-        width: 16px;
-        height: 8px;
-        background-image: url("../../img/branch.svg");
-    }
+  &_rebuild::after {
+    width: 12px;
+    height: 12px;
+    background-image: url("../../img/rebuild.svg");
+  }
 
-    &_author::after {
-        width: 13px;
-        height: 14px;
-        background-image: url("../../img/author.svg");
-    }
+  &_close::after {
+    width: 16px;
+    height: 16px;
+    background-image: url("../../img/close.svg");
+  }
 
-    &_calendar::after {
-        width: 14px;
-        height: 16px;
-        background-image: url("../../img/calendar.svg");
-    }
+  &_branch::after {
+    width: 16px;
+    height: 8px;
+    background-image: url("../../img/branch.svg");
+  }
 
-    &_time::after {
-        width: 14px;
-        height: 16px;
-        background-image: url("../../img/time.svg");
-    }
+  &_author::after {
+    width: 13px;
+    height: 14px;
+    background-image: url("../../img/author.svg");
+  }
 
-    &_completed::after {
-        width: 22px;
-        height: 22px;
-        background-image: url("../../img/completed.svg");
-    }
+  &_calendar::after {
+    width: 14px;
+    height: 16px;
+    background-image: url("../../img/calendar.svg");
+  }
 
-    &_fail::after {
-        width: 22px;
-        height: 22px;
-        background-image: url("../../img/fail.svg");
-    }
+  &_time::after {
+    width: 14px;
+    height: 16px;
+    background-image: url("../../img/time.svg");
+  }
 
-    &_processing::after {
-        width: 22px;
-        height: 22px;
-        background-image: url("../../img/processing.svg");
-    }
+  &_completed::after {
+    width: 22px;
+    height: 22px;
+    background-image: url("../../img/completed.svg");
+  }
+
+  &_fail::after {
+    width: 22px;
+    height: 22px;
+    background-image: url("../../img/fail.svg");
+  }
+
+  &_processing::after {
+    width: 22px;
+    height: 22px;
+    background-image: url("../../img/processing.svg");
+  }
 }

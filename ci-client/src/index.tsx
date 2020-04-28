@@ -1,19 +1,22 @@
-import ReactDOM from 'react-dom';
 import React from 'react';
-import { Provider } from 'react-redux';
-import { BrowserRouter as Router } from 'react-router-dom';
-import { store } from './store';
+import ReactDOM from 'react-dom';
+import {Provider} from 'react-redux';
+import {Router} from 'react-router-dom';
+import {store} from './store';
+import {createBrowserHistory} from 'history';
 
-import App from './components/App/App';
+import {AppConnect} from './components/App/App';
 import './index.scss';
 
+const history = createBrowserHistory();
+
 ReactDOM.render(
-  <React.StrictMode>
-    <Router>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </Router>
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <Provider store={store}>.
+            <Router history={history}>
+                <AppConnect/>
+            </Router>
+        </Provider>
+    </React.StrictMode>,
+    document.getElementById('root')
 );

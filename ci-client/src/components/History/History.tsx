@@ -1,77 +1,79 @@
 import React from 'react';
-import { connect } from 'react-redux';
-import './History.scss';
-import '../Text/Text.scss';
-import '../Layout/Layout.scss';
-import { Header } from '../Header/Header';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
+import {Dispatch} from 'redux';
+import WebApiClient from '../../api/WebApiClient';
+import {BuildModel} from '../../typings/api/models';
+import {actionTypes} from '../../constants/actionTypes';
+import {initialStateCommon} from '../../reducers/common';
+import {initialStateHistory} from '../../reducers/history';
+
+import {Header} from '../Header/Header';
 import BuildList from '../Build/BuildList';
 import PopUp from '../PopUp/PopUp';
-import ciServer from '../../api/ciServer';
 
-import {
-    HISTORY_PAGE_LOADED,
-    HISTORY_SHOW_POPUP,
-    HISTORY_HIDE_POPUP
-} from '../../constants/actionTypes';
+import './History.scss';
 
+interface stateProps {
+    historyPage: initialStateHistory;
+    common: initialStateCommon;
+}
 
-const mapStateToProps = state => ({
-    ...state.history,
-    userConfig: state.common.userConfig
+const mapStateToProps = ({historyPage, common}: stateProps) => ({
+    ...historyPage,
+    ...common
 });
 
-const mapDispatchToProps = dispatch => ({
-    onLoad: (buildList) =>
-        dispatch({ type: HISTORY_PAGE_LOADED, buildList }),
+interface Props extends initialStateHistory, initialStateCommon {
+    onLoad(buildList: Array<BuildModel>): void;
+
+    onShowPopUp(): void;
+
+    onHidePopUp(): void;
+}
+
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+    onLoad: (buildList: Array<BuildModel>) =>
+        dispatch({type: actionTypes.HISTORY_PAGE_LOADED, buildList}),
     onShowPopUp: () =>
-        dispatch({ type: HISTORY_SHOW_POPUP }),
-    onhidePopUp: () =>
-        dispatch({ type: HISTORY_HIDE_POPUP })
+        dispatch({type: actionTypes.HISTORY_SHOW_POPUP}),
+    onHidePopUp: () =>
+        dispatch({type: actionTypes.HISTORY_HIDE_POPUP})
 });
 
-class History extends React.Component {
-
-    showPopUp() {
-        this.props.onShowPopUp();
-    }
-
-    hidePopUp() {
-        this.props.onhidePopUp();
-    }
+class CHistory extends React.Component<Props> {
 
     handleShowMore() {
-        ciServer.getBuilds(this.props.offset, this.props.limit)
-            .then(res => {
-                if (res.data) {
-                    this.props.onLoad(res.data);
-                }
-            });
+        WebApiClient.getBuilds(this.props.offset, this.props.limit)
+            .then(res => this.props.onLoad(res))
+            .catch(e => console.log("Критическая ошибка: " + e.toString()));
     }
 
     componentDidMount() {
-        console.log(this.props);
-        if(this.props.buildList && this.props.buildList.length === 0){
-            ciServer.getBuilds(this.props.offset, this.props.limit)
-                .then(res => {
-                    if (res.data) {
-                        this.props.onLoad(res.data);
-                    }
-                });
+        if (this.props.buildList && this.props.buildList.length === 0) {
+            WebApiClient.getBuilds(this.props.offset, this.props.limit)
+                .then(res => this.props.onLoad(res))
+                .catch(e => console.log("Критическая ошибка: " + e.toString()));
         }
     }
 
     render() {
         return (
             <div>
-                <Header title={this.props.userConfig.repoName} onClick={this.showPopUp.bind(this)} menu history sizeTitle="xxxl" />
+                <Header title={this.props.userConfig.repoName}
+                        onClick={this.props.onShowPopUp} menu history
+                        sizeTitle="xxxl"/>
                 <div className="layout">
                     <div className="layout__container">
-                        <BuildList list={this.props.buildList} hideMore={this.props.hideMore} onClick={this.handleShowMore.bind(this)} />
+                        <BuildList list={this.props.buildList}
+                                   hideMore={this.props.hideMore}
+                                   onClick={() => this.handleShowMore()}/>
                     </div>
                 </div>
-                {this.props.toggle ? <PopUp onClose={this.hidePopUp.bind(this)} /> : null}
+                {this.props.toggle ? <PopUp onClose={this.props.onHidePopUp}/> : null}
             </div>
         );
     }
 }
-export default connect(mapStateToProps, mapDispatchToProps)(History);
+
+export const HistoryConnect = withRouter(connect(mapStateToProps, mapDispatchToProps)(CHistory));

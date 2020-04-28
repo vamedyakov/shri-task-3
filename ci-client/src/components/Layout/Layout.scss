@@ -1,29 +1,29 @@
 @import '../../constants.scss';
 
 .layout {
-    margin-left: auto;
-    margin-right: auto;
-    min-width: 320px;
-    max-width: 1024px;
-    padding: 10px 100px;
-        
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 320px;
+  max-width: 1024px;
+  padding: 10px 100px;
+
+  @media screen and (max-width: $screen-s) {
+    padding: 16px;
+  }
+
+  &__container {
+    display: flex;
+    min-height: 686px;
+
     @media screen and (max-width: $screen-s) {
-        padding: 16px;
+      min-height: 448px;
     }
 
-    &__container {
-        display: flex;
-        min-height: 686px;
-        
-        @media screen and (max-width: $screen-s) {
-            min-height: 448px;
-        }
-
-        &_align {
-            &_center {
-                align-items: center;
-                justify-content: center;
-            }
-        }
+    &_align {
+      &_center {
+        align-items: center;
+        justify-content: center;
+      }
     }
+  }
 }
