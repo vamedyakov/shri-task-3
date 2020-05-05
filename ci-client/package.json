@@ -31,14 +31,18 @@
     "redux-logger": "^3.0.6",
     "redux-mock-store": "^1.5.4",
     "redux-thunk": "^2.3.0",
+    "serve": "^11.3.0",
     "typescript": "^3.8.3"
   },
   "proxy": "http://localhost:3000",
   "scripts": {
     "start": "set PORT=3001 && react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && npm run build-sw && npm run clean-cra-sw",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "build-sw": "node src/sw-build.js",
+    "clean-cra-sw": "rm -f build/precache-manifest.*.js && rm -f build/service-worker.js",
+    "dev": "npm run build && serve -p 3001 build --cors"
   },
   "eslintConfig": {
     "extends": "react-app"

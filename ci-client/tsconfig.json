@@ -22,5 +22,6 @@
   "include": [
     "src",
     "../server/typings"
-  ]
+  ],
+  "exclude": ["src/sw*"]
 }
