@@ -4,6 +4,7 @@ import {Provider} from 'react-redux';
 import {Router} from 'react-router-dom';
 import {store} from './store';
 import {createBrowserHistory} from 'history';
+import * as serviceWorker from './serviceWorker';
 
 import {AppConnect} from './components/App/App';
 import './index.scss';
@@ -20,3 +21,4 @@ ReactDOM.render(
     </React.StrictMode>,
     document.getElementById('root')
 );
+serviceWorker.register();
