@@ -1,7 +1,6 @@
 class QueueAgent {
     constructor() {
         this.dataStore = [];
-        this.runAgents = [];
     }
 
     size() {
